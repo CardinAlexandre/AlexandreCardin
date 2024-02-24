@@ -7,7 +7,7 @@ RUN apk update && apk add git
 RUN git clone https://github.com/PrieurA/AlexandreCardin.git /usr/share/nginx/html
 
 # Copie des fichiers locaux (optionnel, dépend de votre besoin)
-COPY . /usr/share/nginx/html
+# COPY . /usr/share/nginx/html
 
 # Configuration du serveur nginx (si nécessaire)
 # ...
