@@ -1295,6 +1295,7 @@ input, select, textarea {
 			height: 5.5rem;
 			line-height: 5.5rem;
 			border: solid 1px #ffffff;
+			background: url('/images/me.jpeg') center/cover no-repeat;
 			border-radius: 100%;
 		}
 
