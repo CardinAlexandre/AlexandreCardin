@@ -430,3 +430,12 @@ $('form').submit(function (e) {
 		});
 });
 
+const cv = document.getElementById('cv');
+const documentUrl = 'document/CV-Alexandre-Cardin.pdf';
+
+cv.addEventListener('click', () => {
+	const link = document.createElement('a');
+	link.href = documentUrl;
+	link.download = 'CV-Alexandre-Cardin.pdf';
+	link.click();
+});
