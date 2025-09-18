@@ -1291,8 +1291,8 @@ input, select, textarea {
 			}
 
 		#header .logo {
-			width: 5.5rem;
-			height: 5.5rem;
+			width: 5rem;
+			height: 5rem;
 			line-height: 5.5rem;
 			border: solid 1px #ffffff;
 			background: url('/images/me.jpeg') center/cover no-repeat;
@@ -1696,4 +1696,120 @@ input, select, textarea {
 	border-color: #f44336;
 	/* rouge */
 	color: white;
+}
+
+/* Language Switcher */
+.language-switcher {
+	position: fixed;
+	z-index: 1000;
+}
+
+.lang-btn {
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	width: 2.5rem;
+	height: 2.5rem;
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+	max-width: 2.5rem;
+	max-height: 2.5rem;
+	color: #ffffff;
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	backdrop-filter: blur(10px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	outline: none;
+	box-sizing: border-box;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.lang-btn:hover {
+	background: rgba(255, 255, 255, 0.2);
+	border-color: rgba(255, 255, 255, 0.4);
+	border-radius: 50%;
+}
+
+.lang-btn:active {
+	transform: scale(0.95);
+	border-radius: 50%;
+}
+
+/* Prevent animations on language elements */
+[data-lang] {
+	transition: none !important;
+	animation: none !important;
+	transform: none !important;
+	position: static !important;
+}
+
+/* Ensure smooth language switching without template interference */
+[data-lang="fr"], [data-lang="en"] {
+	will-change: auto !important;
+	backface-visibility: visible !important;
+}
+
+/* Fix margin issues for language elements - Force override */
+[data-lang] p,
+[data-lang] p:first-child,
+[data-lang] p:last-child,
+[data-lang] p:nth-child(n) {
+	margin-bottom: 0 !important;
+	margin-top: 0 !important;
+	margin: 0 !important;
+}
+
+/* Add spacing only between paragraphs, not after the last one */
+[data-lang] p + p {
+	margin-top: 2rem !important;
+}
+
+/* Specific override for the template's p rule */
+body [data-lang] p {
+	margin: 0 !important;
+}
+
+/* Override any template margin rules */
+#main [data-lang] p,
+#header [data-lang] p,
+article [data-lang] p {
+	margin-bottom: 0 !important;
+}
+
+/* Force override for lang-text class */
+.lang-text {
+	margin: 0 !important;
+	margin-bottom: 0 !important;
+	margin-top: 0 !important;
+}
+
+/* Specific override for header content */
+#header .content .inner .lang-text {
+	margin: 0 !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 736px) {
+	.language-switcher {
+		top: 15px;
+		right: 15px;
+	}
+	
+	.lang-btn {
+		width: 2.2rem;
+		height: 2.2rem;
+		min-width: 2.2rem;
+		min-height: 2.2rem;
+		max-width: 2.2rem;
+		max-height: 2.2rem;
+		font-size: 11px;
+		border-radius: 50%;
+	}
 }

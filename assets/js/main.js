@@ -439,3 +439,5 @@ cv.addEventListener('click', () => {
 	link.download = 'CV-Alexandre-Cardin.pdf';
 	link.click();
 });
+
+

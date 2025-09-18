@@ -1,0 +1,143 @@
+name: Deploy Portfolio to Raspberry Pi
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: AlexandreCardin
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/arm64
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest
+          ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Deploy to Raspberry Pi via Portainer
+      id: deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.RASPBERRY_PI_HOST }}
+        username: ${{ secrets.RASPBERRY_PI_USER }}
+        key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
+        script: |
+          # Login to Docker Hub
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          
+          # Pull the latest image and check if successful
+          echo "Pulling latest image..."
+          if docker pull ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest; then
+            echo "Image pulled successfully"
+            
+            # Verify the image exists locally
+            if docker image inspect ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest > /dev/null 2>&1; then
+              echo "Image verified locally"
+              
+              # Stop and remove existing container only if new image is ready
+              echo "Stopping existing container..."
+              docker stop cardinalexandre || true
+              docker rm cardinalexandre || true
+              
+              # Run new container
+              echo "Starting new container..."
+              if docker run -d \
+                --name cardinalexandre \
+                --restart unless-stopped \
+                -p 32772:80 \
+                ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest; then
+                echo "Container started successfully"
+                
+                # Wait a moment and check if container is running
+                sleep 5
+                if docker ps | grep -q cardinalexandre; then
+                  echo "Deployment successful!"
+                  echo "DEPLOY_SUCCESS=true" >> $GITHUB_ENV
+                else
+                  echo "ERROR: Container failed to start properly"
+                  echo "DEPLOY_SUCCESS=false" >> $GITHUB_ENV
+                  exit 1
+                fi
+              else
+                echo "ERROR: Failed to start new container"
+                echo "DEPLOY_SUCCESS=false" >> $GITHUB_ENV
+                exit 1
+              fi
+            else
+              echo "ERROR: Image not found locally after pull"
+              echo "DEPLOY_SUCCESS=false" >> $GITHUB_ENV
+              exit 1
+            fi
+          else
+            echo "ERROR: Failed to pull image"
+            echo "DEPLOY_SUCCESS=false" >> $GITHUB_ENV
+            exit 1
+          fi
+          
+    - name: Cleanup Docker Hub images
+      if: always()
+      run: |
+        echo "Starting Docker Hub cleanup..."
+        
+        # Login to Docker Hub
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        
+        # Get current commit SHA for tagging
+        CURRENT_SHA="${{ github.sha }}"
+        
+        # Cleanup images based on deployment status
+        if [ "$DEPLOY_SUCCESS" = "true" ]; then
+          echo "Deployment successful - cleaning up all images..."
+          
+          # Delete the commit-specific image
+          echo "Deleting commit-specific image: ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA"
+          docker manifest inspect ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA >/dev/null 2>&1 && \
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA || \
+            echo "Commit-specific image not found or already deleted"
+            
+          # Delete latest tag after successful deployment
+          echo "Deleting latest image after successful deployment..."
+          docker manifest inspect ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest >/dev/null 2>&1 && \
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest || \
+            echo "Latest image not found or already deleted"
+          
+        else
+          echo "Deployment failed - cleaning up all images..."
+          
+          # Delete both images on failure
+          echo "Deleting commit-specific image: ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA"
+          docker manifest inspect ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA >/dev/null 2>&1 && \
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:$CURRENT_SHA || \
+            echo "Commit-specific image not found or already deleted"
+            
+          echo "Deleting latest image: ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest"
+          docker manifest inspect ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest >/dev/null 2>&1 && \
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/cardinalexandre:latest || \
+            echo "Latest image not found or already deleted"
+        fi
+        
+        # Clean up local images to save space
+        echo "Cleaning up local images..."
+        docker image prune -f
+        
+        echo "Docker Hub cleanup completed!"

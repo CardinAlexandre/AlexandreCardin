@@ -5,6 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="icon" type="image/x-icon" href="/images/Alex.ico">
 		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -18,19 +19,27 @@
 						<div class="content">
 							<div class="inner">
 								<h1>Alexandre Cardin</h1>
-								<p>Code addict en quête de nouvelles aventures digitales.</p>
+								<p data-lang="fr" class="lang-text">Code addict en quête de nouvelles aventures digitales.</p>
+								<p data-lang="en" class="lang-text" style="display: none;">Code addict seeking new digital adventures.</p>
 							</div>
 						</div>
 						<nav>
 							<ul>
-								<li><a href="#intro">Intro</a></li>
-								<li><a href="#work">Work</a></li>
-								<li><a href="#about">About</a></li>
-								<li><a href="#contact">Contact</a></li>
-								<li><a href="/CV-Alexandre-Cardin.pdf" target="_blank">CV</a></li>
+								<li><a href="#intro" data-lang="fr">Intro</a><a href="#intro" data-lang="en" style="display: none;">Intro</a></li>
+								<li><a href="#work" data-lang="fr">Travail</a><a href="#work" data-lang="en" style="display: none;">Work</a></li>
+								<li><a href="#about" data-lang="fr">À propos</a><a href="#about" data-lang="en" style="display: none;">About</a></li>
+								<li><a href="#contact" data-lang="fr">Contact</a><a href="#contact" data-lang="en" style="display: none;">Contact</a></li>
+								<li><a href="/CV-Alexandre-Cardin.pdf" target="_blank" data-lang="fr">CV</a><a href="/English-Version-CV-Alexandre-Cardin.pdf" target="_blank" data-lang="en" style="display: none;">CV</a></li>
 								<!--<li><a href="#elements">Elements</a></li>-->
 							</ul>
 						</nav>
+						<!-- Language Switcher -->
+						<div class="language-switcher">
+							<button id="lang-btn" class="lang-btn" title="Switch language">
+								<span data-lang="fr">EN</span>
+								<span data-lang="en" style="display: none;">FR</span>
+							</button>
+						</div>
 					</header>
 
 				<!-- Main -->
@@ -38,86 +47,105 @@
 
 						<!-- Intro -->
 							<article id="intro">
-								<h2 class="major">Intro</h2>
+								<h2 class="major" data-lang="fr">Intro</h2>
+								<h2 class="major" data-lang="en" style="display: none;">Intro</h2>
 								<span class="image main"><img src="/images/pic01.jpg" alt="" /></span>
-								<p>Bienvenue ! Je m'appelle Alexandre et je suis un développeur backend basé à Toulouse.</p>
+								<p data-lang="fr">Bienvenue ! Je m'appelle Alexandre et je suis développeur full-stack basé à Toulouse.</p>
+								<p data-lang="en" style="display: none;">Welcome! My name is Alexandre and I'm a full-stack developer based in Toulouse.</p>
 
-								<p>Depuis mon plus jeune âge, je suis fasciné par le monde du développement informatique et les possibilités infinies
-								qu'offre le coding pour créer des produits digitaux innovants.
-								Après avoir obtenu mon diplôme de développeur d'application numérique, j'ai commencé à travailler comme développeur backend chez <a href="https://www.illinks.fr/">illinks</a>. J'ai
-								eu la chance de participer à des projets stimulants qui m'ont permis d'apprendre et de consolider mon expertise.</p>
+								<p data-lang="fr">Depuis mon plus jeune âge, je suis passionné par le développement informatique et les possibilités infinies qu'offre le code pour donner vie à des produits digitaux innovants. Après l'obtention de mon diplôme de développeur d'application numérique, j'ai débuté ma carrière chez <a href="https://www.illinks.fr/">illinks</a>, où j'ai participé à des projets stimulants qui m'ont permis de consolider mes compétences et d'acquérir une solide expérience backend.</p>
+								<p data-lang="en" style="display: none;">Since my early years, I've been passionate about software development and the infinite possibilities that code offers to bring innovative digital products to life. After obtaining my digital application developer diploma, I started my career at <a href="https://www.illinks.fr/">illinks</a>, where I participated in stimulating projects that allowed me to consolidate my skills and acquire solid backend experience.</p>
 
-								<p>Aujourd'hui, je suis spécialisé dans le développement C#/.NET et je cherche de nouveaux
-									challenges à relever. Mon objectif est de mettre mes compétences techniques au service de projets ambitieux, tout en
-									continuant à évoluer dans un environnement dynamique et innovant.</p>
+								<p data-lang="fr">Par la suite, j'ai rejoint <a href="https://www.viveris.fr/">Viveris</a> en tant que consultant pour le client <a href="https://www.liebherr.com/">Liebherr</a>, où j'ai contribué au développement et à l'optimisation de solutions techniques dans un environnement exigeant et collaboratif.</p>
+								<p data-lang="en" style="display: none;">Subsequently, I joined <a href="https://www.viveris.fr/">Viveris</a> as a consultant for the <a href="https://www.liebherr.com/">Liebherr</a> client, where I contributed to the development and optimization of technical solutions in a demanding and collaborative environment.</p>
 
-								<p>N'hésitez pas à me contacter si vous pensez que nous pourrions collaborer ensemble. Je suis très motivé à l'idée de
-								mettre mon expertise sur les technologies Microsoft au profit de vos projets.</p>
+								<p data-lang="fr">Aujourd'hui, je suis spécialisé dans le développement C#/.NET, tout en ayant une expérience full-stack, et je suis en quête de nouveaux défis. Mon ambition est de mettre mon expertise sur les technologies Microsoft et mes compétences transverses au service de projets ambitieux, innovants et à forte valeur ajoutée.</p>
+								<p data-lang="en" style="display: none;">Today, I'm specialized in C#/.NET development, while having full-stack experience, and I'm seeking new challenges. My ambition is to put my expertise in Microsoft technologies and my cross-functional skills at the service of ambitious, innovative, and high-value-added projects.</p>
+
+								<p data-lang="fr">N'hésitez pas à me contacter si vous souhaitez collaborer : je suis motivé à l'idée d'apporter mon savoir-faire et mon énergie à vos projets.</p>
+								<p data-lang="en" style="display: none;">Don't hesitate to contact me if you wish to collaborate: I'm motivated by the idea of bringing my expertise and energy to your projects.</p>
 							</article>
 
 						<!-- Work -->
 							<article id="work">
-								<h2 class="major">Work</h2>
+								<h2 class="major" data-lang="fr">Travail</h2>
+								<h2 class="major" data-lang="en" style="display: none;">Work</h2>
 								<span class="image main"><img src="/images/pic02.jpg" alt="" /></span>
-								<p>Je travaille depuis près de 2 ans comme développeur backend C# .NET au sein de la société illinks, spécialiste de
-								solutions logicielles de GED (Gestion Electronique de Documents). Mes deux missions centrales sont l'interfaçage de
-								notre outil de GED avec les applications métiers de nos clients, ainsi que le développement de web services pour
-								enrichir les fonctionnalités de notre solution logicielle.</p>
+								<p data-lang="fr">Depuis mes débuts, j'ai toujours été animé par l'envie de comprendre comment la technologie pouvait transformer les processus et simplifier le quotidien. C'est ce qui m'a conduit à rejoindre <a href="https://www.illinks.fr/">illinks</a>, où j'ai travaillé pendant deux ans comme développeur Angular / .NET. J'y ai découvert le monde exigeant de la GED, en connectant notre solution aux logiciels métiers de cabinets comptables et en développant des web services en C# .NET pour automatiser des traitements documentaires. Cette expérience m'a permis de consolider mes bases techniques tout en répondant directement aux besoins concrets des utilisateurs.</p>
+								<p data-lang="en" style="display: none;">From the beginning, I've always been driven by the desire to understand how technology could transform processes and simplify daily life. This is what led me to join <a href="https://www.illinks.fr/">illinks</a>, where I worked for two years as an Angular / .NET developer. I discovered the demanding world of EDM, connecting our solution to accounting firms' business software and developing C# .NET web services to automate document processing. This experience allowed me to consolidate my technical foundations while directly addressing users' concrete needs.</p>
 
-								<p>Mon activité d'interfaçage consiste principalement à connecter notre outil de GED aux logiciels de comptabilité et de
-								gestion utilisés par nos clients, qui sont pour la plupart des cabinets d'expertise comptable. Il s'agit de réaliser une
-								intégration transparente permettant un passage fluide de leurs données métiers vers notre plateforme documentaire.</p>
+								<p data-lang="fr">En juillet 2024, j'ai choisi de relever un nouveau défi en intégrant <a href="https://www.viveris.fr/">Viveris</a> comme développeur React / .NET, pour intervenir chez <a href="https://www.liebherr.com/">Liebherr</a> sur un projet ambitieux de Fleet Management System (FMS) dans le secteur minier. J'y travaille au quotidien dans un environnement international, où la communication en anglais est essentielle, que ce soit lors des cérémonies Scrum ou des différents meetings. Je collabore étroitement avec les Product Owners afin de bien comprendre les attentes métiers et de garantir une production de qualité, en phase avec les besoins stratégiques du projet.</p>
+								<p data-lang="en" style="display: none;">In July 2024, I chose to take on a new challenge by joining <a href="https://www.viveris.fr/">Viveris</a> as a React / .NET developer, to work at <a href="https://www.liebherr.com/">Liebherr</a> on an ambitious Fleet Management System (FMS) project in the mining sector. I work daily in an international environment, where English communication is essential, whether during Scrum ceremonies or various meetings. I collaborate closely with Product Owners to understand business expectations and ensure quality production, aligned with the project's strategic needs.</p>
 
-								<p>Je consacre également une large partie de mon temps au développement de web services en C# .NET visant à automatiser des
-								traitements documentaires ou ajouter de nouvelles capacités à notre logiciel de GED. Ces développements spécifiques
-								permettent de répondre au mieux aux besoins de nos clients en termes de gestion de l'information et des processus
-								métiers.</p>
+								<p data-lang="fr">Mon rôle couvre principalement l'internationalisation et l'industrialisation du produit, ainsi que l'ajout de nouvelles fonctionnalités. Ce projet est aussi une formidable opportunité d'élargir mon expertise sur des technologies modernes telles que DDS, gRPC, Docker, Redis, SignalR et RabbitMQ, tout en perfectionnant mes pratiques de travail en équipe agile.</p>
+								<p data-lang="en" style="display: none;">My role covers mainly product internationalization and industrialization, as well as adding new features. This project is also a fantastic opportunity to expand my expertise on modern technologies such as DDS, gRPC, Docker, Redis, SignalR, and RabbitMQ, while perfecting my agile team work practices.</p>
+
+								<p data-lang="fr">Aujourd'hui, je continue à enrichir mon expertise full-stack et à approfondir ma maîtrise des technologies Microsoft. Mon ambition est de mettre cette expérience au service de projets innovants et stimulants, tout en poursuivant mon apprentissage et en relevant de nouveaux défis.</p>
+								<p data-lang="en" style="display: none;">Today, I continue to enrich my full-stack expertise and deepen my mastery of Microsoft technologies. My ambition is to put this experience at the service of innovative and stimulating projects, while continuing my learning and taking on new challenges.</p>
 							</article>
 
 						<!-- About -->
 							<article id="about">
-								<h2 class="major">About</h2>
+								<h2 class="major" data-lang="fr">À propos</h2>
+								<h2 class="major" data-lang="en" style="display: none;">About</h2>
 								<span class="image main"><img src="/images/pic03.jpg" alt="" /></span>
-								<p>Je m'appelle Alexandre et je suis originaire de Rouen. J'apprécie beaucoup le sport, en particulier le basket et le
+								<p data-lang="fr">Je m'appelle Alexandre et je suis originaire de Rouen. J'apprécie beaucoup le sport, en particulier le basket et le
 								tennis. Je suis également motard et j'adore parcourir les routes à moto pendant mon temps libre.</p>
+								<p data-lang="en" style="display: none;">My name is Alexandre and I'm originally from Rouen. I really enjoy sports, especially basketball and
+								tennis. I'm also a motorcyclist and I love riding the roads on my bike in my free time.</p>
 
-								<p>J'ai vécu 3 ans à Montréal où j'ai suivi des études d'ébéniste, après avoir fait 1 année aux compagnons du devoir en
+								<p data-lang="fr">J'ai vécu 3 ans à Montréal où j'ai suivi des études d'ébéniste, après avoir fait 1 année aux compagnons du devoir en
 								chaudronnerie. J'ai toujours été attiré par les métiers manuels et la fabrication artisanale. Réaliser de mes mains des
 								pièces uniques m'a toujours beaucoup plu.</p>
+								<p data-lang="en" style="display: none;">I lived 3 years in Montreal where I studied cabinetmaking, after doing 1 year with the compagnons du devoir in
+								metalworking. I've always been attracted to manual trades and artisanal manufacturing. Creating unique pieces with my hands
+								has always pleased me greatly.</p>
 
-								<p>À mon retour du Canada, je me suis installé à Toulouse pour retrouver le soleil après le froid canadien, mais aussi et
+								<p data-lang="fr">À mon retour du Canada, je me suis installé à Toulouse pour retrouver le soleil après le froid canadien, mais aussi et
 								surtout parce que l'école dans laquelle je souhaitais me former au développement web était située dans cette ville.</p>
+								<p data-lang="en" style="display: none;">Upon my return from Canada, I settled in Toulouse to find the sun again after the Canadian cold, but also and
+								especially because the school where I wanted to train in web development was located in this city.</p>
 
-								<p>Bien que j'ai grandi dans un environnement rempli de développeurs, j'avais choisi plus jeune de me diriger vers d'autres
+								<p data-lang="fr">Bien que j'ai grandi dans un environnement rempli de développeurs, j'avais choisi plus jeune de me diriger vers d'autres
 								domaines que l'informatique. Cependant, de retour en France, je me suis lancé dans une carrière de développeur web qui
 								s'est avérée être une suite naturelle pour moi.</p>
+								<p data-lang="en" style="display: none;">Although I grew up in an environment full of developers, I had chosen when I was younger to go into other
+								fields than computer science. However, upon returning to France, I launched into a web developer career that
+								proved to be a natural continuation for me.</p>
 
-								<p>Aujourd'hui, coder et créer des applications est autant une passion que la création manuelle que j'ai pu expérimenter.
+								<p data-lang="fr">Aujourd'hui, coder et créer des applications est autant une passion que la création manuelle que j'ai pu expérimenter.
 								Je trouve beaucoup de satisfaction à mêler logique et créativité dans mon travail au quotidien. Mon parcours atypique me
 								permet d'apporter une vision différente en développement.</p>
+								<p data-lang="en" style="display: none;">Today, coding and creating applications is as much a passion as the manual creation I was able to experience.
+								I find great satisfaction in mixing logic and creativity in my daily work. My atypical background allows me
+								to bring a different perspective to development.</p>
 							</article>
 
 						<!-- Contact -->
 							<article id="contact">
-								<h2 class="major">Contact</h2>
+								<h2 class="major" data-lang="fr">Contact</h2>
+								<h2 class="major" data-lang="en" style="display: none;">Contact</h2>
 								<form method="post" action="sendmail">
 									<div class="fields">
 										<div class="field half">
-											<label for="name">Name</label>
+											<label for="name" data-lang="fr">Nom</label>
+											<label for="name" data-lang="en" style="display: none;">Name</label>
 											<input type="text" name="name" id="name" />
 										</div>
 										<div class="field half">
-											<label for="email">Email</label>
+											<label for="email" data-lang="fr">Email</label>
+											<label for="email" data-lang="en" style="display: none;">Email</label>
 											<input type="text" name="email" id="email" />
 										</div>
 										<div class="field">
-											<label for="message">Message</label>
+											<label for="message" data-lang="fr">Message</label>
+											<label for="message" data-lang="en" style="display: none;">Message</label>
 											<textarea name="message" id="message" rows="4"></textarea>
 										</div>
 									</div>
 									<ul class="actions">
-										<li><button type="submit" class="btn primary" id="submitBtn">Send Message</button></li>
-										<li><input type="reset" value="Reset" /></li>
+										<li><button type="submit" class="btn primary" id="submitBtn" data-lang="fr">Envoyer le message</button><button type="submit" class="btn primary" id="submitBtn" data-lang="en" style="display: none;">Send Message</button></li>
+										<li><input type="reset" value="Reset" data-lang="fr" /><input type="reset" value="Reset" data-lang="en" style="display: none;" /></li>
 									</ul>
 								</form>
 								<ul class="icons">
@@ -139,6 +167,72 @@
 			<script src="/assets/js/breakpoints.min.js"></script>
 			<script src="/assets/js/util.js"></script>
 			<script src="/assets/js/main.js"></script>
+
+		<!-- Language Switcher -->
+		<script>
+		(function() {
+			let currentLanguage = 'fr';
+			
+			function initLanguage() {
+				// Get saved language preference
+				const savedLang = localStorage.getItem('portfolio-lang');
+				if (savedLang === 'en' || savedLang === 'fr') {
+					currentLanguage = savedLang;
+				}
+				
+				updateLanguageDisplay();
+				setupLanguageButton();
+			}
+			
+			function setupLanguageButton() {
+				const langButton = document.getElementById('lang-btn');
+				if (langButton) {
+					// Remove existing listeners by cloning the button
+					const newButton = langButton.cloneNode(true);
+					langButton.parentNode.replaceChild(newButton, langButton);
+					
+					// Add click listener
+					newButton.addEventListener('click', function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						toggleLanguage();
+					});
+				}
+			}
+			
+			function toggleLanguage() {
+				currentLanguage = currentLanguage === 'fr' ? 'en' : 'fr';
+				localStorage.setItem('portfolio-lang', currentLanguage);
+				updateLanguageDisplay();
+			}
+			
+			function updateLanguageDisplay() {
+				const elements = document.querySelectorAll('[data-lang]');
+				elements.forEach(function(element) {
+					const elementLang = element.getAttribute('data-lang');
+					if (elementLang === currentLanguage) {
+						element.style.display = '';
+						element.style.visibility = 'visible';
+						element.style.opacity = '1';
+					} else {
+						element.style.display = 'none';
+						element.style.visibility = 'hidden';
+						element.style.opacity = '0';
+					}
+				});
+			}
+			
+			// Initialize when page is ready
+			if (document.readyState === 'complete') {
+				initLanguage();
+			} else {
+				window.addEventListener('load', initLanguage);
+			}
+			
+			// Fallback initialization
+			setTimeout(initLanguage, 1000);
+		})();
+		</script>
 
 	</body>
 </html>
