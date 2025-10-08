@@ -1,155 +1,167 @@
-# Portfolio Alexandre Cardin
+# Portfolio – Alexandre Cardin
 
 ## 📋 Description
 
-Ce projet est un portfolio personnel développé pour Alexandre Cardin, développeur backend C#/.NET basé à Toulouse. Le site présente son parcours professionnel, ses compétences et permet aux visiteurs de le contacter.
+Welcome to my personal portfolio!
+I’m **Alexandre Cardin**, a **C#/.NET backend developer** based in **Toulouse, France**.
+This website showcases my professional background, my technical skills, and gives visitors an easy way to get in touch with me.
 
-## 🛠️ Technologies utilisées
+## 🛠️ Technologies Used
 
-- **Frontend** : HTML5, CSS3, JavaScript
-- **Framework CSS** : Template HTML5 UP (Dimension)
-- **Serveur web** : Nginx (Alpine Linux)
-- **Containerisation** : Docker
-- **Assets** : 
-  - FontAwesome pour les icônes
-  - Images optimisées (JPG, PNG)
-  - CSS compilé depuis SASS
+* **Frontend**: HTML5, CSS3, JavaScript
+* **CSS Framework**: HTML5 UP (Dimension template)
+* **Web Server**: Nginx (Alpine Linux)
+* **Containerization**: Docker
+* **Assets**:
 
-## 📁 Structure du projet
+  * FontAwesome for icons
+  * Optimized images (JPG, PNG)
+  * CSS compiled from SASS
+
+## 📁 Project Structure
 
 ```
 AlexandreCardin/
 ├── assets/
-│   ├── css/           # Styles CSS compilés
-│   ├── js/            # Scripts JavaScript
-│   ├── sass/          # Sources SASS
-│   └── webfonts/      # Polices FontAwesome
-├── images/            # Images du portfolio
-├── index.html         # Page principale
-├── Dockerfile         # Configuration Docker
+│   ├── css/           # Compiled CSS styles
+│   ├── js/            # JavaScript scripts
+│   ├── sass/          # SASS sources
+│   └── webfonts/      # FontAwesome fonts
+├── images/            # Portfolio images
+├── index.html         # Main page
+├── Dockerfile         # Docker configuration
 └── CV-Alexandre-Cardin.pdf
 ```
 
-## 🚀 Installation et test en local
+## 🚀 Local Installation & Testing
 
-### Prérequis
-- Docker installé sur votre machine
-- Git (pour cloner le repository)
+### Requirements
 
-### Étapes d'installation
+* Docker installed on your machine
+* Git (to clone the repository)
 
-1. **Cloner le repository**
+### Installation Steps
+
+1. **Clone the repository**
+
    ```bash
-   git clone <url-du-repository>
+   git clone https://github.com/CardinAlexandre/AlexandreCardin.git
    cd AlexandreCardin
    ```
 
-2. **Construire l'image Docker**
+2. **Build the Docker image**
+
    ```bash
    docker build -t alexandre-cardin-portfolio .
    ```
 
-3. **Lancer le conteneur**
+3. **Run the container**
+
    ```bash
    docker run -d -p 8080:80 --name portfolio alexandre-cardin-portfolio
    ```
 
-4. **Accéder au site**
-   Ouvrez votre navigateur et allez sur : `http://localhost:8080`
+4. **Access the website**
+   Open your browser and go to: `http://localhost:8080`
 
-### Alternative sans Docker
+### Alternative Without Docker
 
-Si vous préférez tester directement avec un serveur web local :
+If you’d like to test it directly using a local web server:
 
 ```bash
-# Avec Python (si installé)
+# With Python (if installed)
 python -m http.server 8000
 
-# Avec Node.js (si installé)
+# With Node.js (if installed)
 npx serve .
 
-# Avec PHP (si installé)
+# With PHP (if installed)
 php -S localhost:8000
 ```
 
-Puis accédez à `http://localhost:8000`
+Then open your browser at `http://localhost:8000`
 
-## 🐳 Configuration Docker
+## 🐳 Docker Configuration
 
-Le Dockerfile utilise une image Nginx Alpine légère :
+The project uses a lightweight **Nginx Alpine** image:
 
 ```dockerfile
 FROM nginx:alpine
 COPY . /usr/share/nginx/html
 ```
 
-Cette configuration :
-- Utilise Nginx comme serveur web
-- Copie tous les fichiers statiques dans le répertoire de Nginx
-- Expose le port 80 par défaut
+This setup:
 
-## 📝 Fonctionnalités
+* Uses Nginx as the web server
+* Copies all static files to Nginx’s default directory
+* Exposes port 80 by default
 
-- **Page d'accueil** avec présentation personnelle
-- **Section Intro** : Parcours et motivation
-- **Section Work** : Expérience professionnelle chez illinks
-- **Section About** : Présentation personnelle et hobbies
-- **Section Contact** : Formulaire de contact et liens sociaux
-- **CV téléchargeable** en PDF
-- **Design responsive** adapté mobile/desktop
-- **Changement de langue** : Français/Anglais avec bouton discret
+## 📝 Features
 
-## 🔧 Développement
+* **Home page** introducing myself
+* **Intro section** about my journey and motivation
+* **Work section** highlighting my experience at illinks
+* **About section** with personal details and hobbies (basketball, motorbikes, skiing, etc.)
+* **Contact section** with a contact form and social links
+* **Downloadable CV** in PDF format
+* **Responsive design** (mobile & desktop friendly)
+* **Language switch** between English and French via a simple button
 
-### Modification des styles
-Les fichiers SASS se trouvent dans `assets/sass/`. Pour recompiler les CSS :
+## 🔧 Development
+
+### Editing Styles
+
+SASS files are located in `assets/sass/`. To recompile CSS:
 
 ```bash
-# Installer SASS (si pas déjà fait)
+# Install SASS (if not already installed)
 npm install -g sass
 
-# Compiler les styles
+# Compile styles
 sass assets/sass/main.scss assets/css/main.css
 sass assets/sass/noscript.scss assets/css/noscript.css
 ```
 
-### Structure des sections
-- Chaque section est dans un `<article>` avec un ID unique
-- La navigation utilise des ancres pour naviguer entre les sections
-- Les images sont optimisées et stockées dans le dossier `images/`
+### Site Structure
 
-### Système de changement de langue
-- **Bouton discret** : Position fixe en haut à droite
-- **JavaScript vanilla** : Code optimisé et léger
-- **Persistance** : Sauvegarde de la préférence dans localStorage
-- **Attributs data-lang** : Gestion des contenus bilingues
-- **Responsive** : Adaptation mobile et desktop
+* Each section is an `<article>` with a unique ID
+* Navigation works with internal anchors
+* Optimized images are stored in `images/`
 
-## 🚀 Déploiement
+### Language Switching
 
-### Prochaines étapes pour le CI/CD
+* **Discreet button** in the top-right corner
+* **Vanilla JavaScript** for fast, lightweight behavior
+* **Persistence** via `localStorage`
+* **data-lang attributes** for bilingual content
+* **Responsive** for both mobile and desktop
 
-Pour automatiser le build et le déploiement, nous pourrons mettre en place :
+## 🚀 Deployment
 
-1. **GitHub Actions** ou **GitLab CI** pour l'automatisation
-2. **Registry Docker** (Docker Hub, GitHub Container Registry)
-3. **Déploiement automatique** sur votre serveur
-4. **Tests automatisés** avant déploiement
+### Next Steps for CI/CD
 
-### Variables d'environnement nécessaires
-- `DOCKER_REGISTRY_URL` : URL du registry Docker
-- `DOCKER_USERNAME` : Nom d'utilisateur Docker
-- `DOCKER_PASSWORD` : Token d'accès Docker
-- `SERVER_HOST` : Adresse de votre serveur
-- `SERVER_USER` : Utilisateur SSH du serveur
-- `SERVER_KEY` : Clé privée SSH
+I plan to automate builds and deployments using:
+
+1. **GitHub Actions** or **GitLab CI**
+2. **Docker Registry** (Docker Hub or GitHub Container Registry)
+3. **Automatic deployment** to my server
+4. **Automated tests** before each release
+
+### Environment Variables
+
+* `DOCKER_REGISTRY_URL`
+* `DOCKER_USERNAME`
+* `DOCKER_PASSWORD`
+* `SERVER_HOST`
+* `SERVER_USER`
+* `SERVER_KEY`
 
 ## 📞 Contact
 
-- **GitHub** : [PrieurA](https://github.com/PrieurA)
-- **LinkedIn** : [alexandre-prieur](https://www.linkedin.com/in/alexandre-prieur/)
-- **Email** : Via le formulaire de contact sur le site
+* **LinkedIn**: [alexandre-cardin](https://www.linkedin.com/in/alexandre-cardin/)
+* **Email**: through the contact form on the website
 
-## 📄 Licence
+## 📄 License
 
-Ce projet est un portfolio personnel. Tous droits réservés.
+This project is my **personal portfolio**.
+All rights reserved © Alexandre Cardin.
