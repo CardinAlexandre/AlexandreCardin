@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   portfolio:
-    image: ${DOCKER_USERNAME}/alexandre-cardin-portfolio:latest
+    image: registry.cardinalexandre.fr/portfolio:latest
     container_name: alexandre-cardin-portfolio
     restart: unless-stopped
     ports:
