@@ -1,4 +1,4 @@
-name: Deploy Portfolio to Raspberry Pi
+name: Deploy Portfolio
 
 on:
   push:
@@ -7,101 +7,133 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  REGISTRY: registry.cardinalexandre.fr
+  IMAGE_NAME: portfolio
+  CONTAINER_NAME: cardinalexandre
+  CONTAINER_PORT: 80
+
 jobs:
-  build-and-deploy:
+  # ===========================================================================
+  # Job 1 — Build & Push
+  # Build l'image Docker pour ARM64 et la pousse sur le registry privé
+  # ===========================================================================
+  build:
+    name: Build & Push
     runs-on: ubuntu-latest
     environment: AlexandreCardin
-    
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }}
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Login to private registry
-      uses: docker/login-action@v3
-      with:
-        registry: registry.cardinalexandre.fr
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        platforms: linux/arm64
-        push: true
-        tags: |
-          registry.cardinalexandre.fr/portfolio:latest
-          registry.cardinalexandre.fr/portfolio:${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Login to private registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Deploy to Raspberry Pi via Portainer
-      id: deploy
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.RASPBERRY_PI_HOST }}
-        username: ${{ secrets.RASPBERRY_PI_USER }}
-        key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
-        script: |
-          # Login to private registry
-          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login registry.cardinalexandre.fr -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
 
-          # Pull the latest image and check if successful
-          echo "Pulling latest image..."
-          if docker pull registry.cardinalexandre.fr/portfolio:latest; then
-            echo "Image pulled successfully"
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-            # Verify the image exists locally
-            if docker image inspect registry.cardinalexandre.fr/portfolio:latest > /dev/null 2>&1; then
-              echo "Image verified locally"
+  # ===========================================================================
+  # Job 2 — Deploy
+  # Déploie l'image sur le Raspberry Pi via SSH
+  # ===========================================================================
+  deploy:
+    name: Deploy to Raspberry Pi
+    runs-on: ubuntu-latest
+    environment: AlexandreCardin
+    needs: build
 
-              # Stop and remove existing container only if new image is ready
-              echo "Stopping existing container..."
-              docker stop cardinalexandre || true
-              docker rm cardinalexandre || true
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.RASPBERRY_PI_HOST }}
+          username: ${{ secrets.RASPBERRY_PI_USER }}
+          key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
+          script: |
+            set -e
 
-              # Run new container
-              echo "Starting new container..."
-              if docker run -d \
-                --name cardinalexandre \
-                --restart unless-stopped \
-                -p 32772:80 \
-                registry.cardinalexandre.fr/portfolio:latest; then
-                echo "Container started successfully"
+            REGISTRY="${{ env.REGISTRY }}"
+            IMAGE="$REGISTRY/${{ env.IMAGE_NAME }}:latest"
+            CONTAINER="${{ env.CONTAINER_NAME }}"
 
-                # Wait a moment and check if container is running
-                sleep 5
-                if docker ps | grep -q cardinalexandre; then
-                  echo "Deployment successful!"
-                else
-                  echo "ERROR: Container failed to start properly"
-                  exit 1
-                fi
-              else
-                echo "ERROR: Failed to start new container"
-                exit 1
-              fi
+            echo "=== Login au registry ==="
+            echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "$REGISTRY" \
+              -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+            echo "=== Pull de la nouvelle image ==="
+            docker pull "$IMAGE"
+
+            echo "=== Arrêt et suppression de l'ancien container ==="
+            docker stop "$CONTAINER" 2>/dev/null || true
+            docker rm   "$CONTAINER" 2>/dev/null || true
+
+            echo "=== Démarrage du nouveau container ==="
+            docker run -d \
+              --name "$CONTAINER" \
+              --restart unless-stopped \
+              --network proxy \
+              --health-cmd "wget --no-verbose --tries=1 --spider http://127.0.0.1/ || exit 1" \
+              --health-interval 30s \
+              --health-timeout 3s \
+              --health-start-period 10s \
+              --health-retries 3 \
+              "$IMAGE"
+
+            echo "=== Vérification du démarrage (attente 10s) ==="
+            sleep 10
+            if docker ps --filter "name=$CONTAINER" --filter "status=running" | grep -q "$CONTAINER"; then
+              echo "✅ Déploiement réussi !"
+              docker ps --filter "name=$CONTAINER" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
             else
-              echo "ERROR: Image not found locally after pull"
+              echo "❌ Le container n'a pas démarré correctement"
+              docker logs "$CONTAINER" --tail=20
               exit 1
             fi
-          else
-            echo "ERROR: Failed to pull image"
-            exit 1
-          fi
 
-    - name: Cleanup local runner images
-      if: always()
-      run: |
-        echo "Cleaning up local runner images..."
+            echo "=== Nettoyage des anciennes images ==="
+            docker image prune -f
 
-        CURRENT_SHA="${{ github.sha }}"
+  # ===========================================================================
+  # Job 3 — Cleanup runner
+  # Nettoie les images sur le runner GitHub après build
+  # ===========================================================================
+  cleanup:
+    name: Cleanup Runner
+    runs-on: ubuntu-latest
+    needs: [ build, deploy ]
+    if: always()
 
-        docker rmi registry.cardinalexandre.fr/portfolio:$CURRENT_SHA || true
-        docker rmi registry.cardinalexandre.fr/portfolio:latest || true
-        docker image prune -f
-
-        echo "Cleanup completed!"
+    steps:
+      - name: Remove images from runner
+        run: |
+          docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest || true
+          docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} || true
+          docker image prune -f
+          echo "✅ Nettoyage terminé"
