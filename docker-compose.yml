@@ -22,6 +22,18 @@ services:
       retries: 3
       start_period: 40s
 
+  # Service d'envoi du formulaire de contact (joint par nginx via /api/)
+  portfolio-mailer:
+    image: registry.cardinalexandre.fr/portfolio-mailer:latest
+    container_name: portfolio-mailer
+    restart: unless-stopped
+    environment:
+      - Smtp__Username=${SMTP_USERNAME}
+      - Smtp__Password=${SMTP_PASSWORD}
+      - Smtp__From=${SMTP_FROM}
+    networks:
+      - portfolio-network
+
   # Optionnel : Reverse proxy avec Traefik
   traefik:
     image: traefik:v2.10

@@ -19,6 +19,13 @@ Ajoutez ces secrets dans votre repository GitHub (Settings → Secrets and varia
 - `RASPBERRY_PI_USER` : Nom d'utilisateur SSH (ex: `pi`)
 - `RASPBERRY_PI_SSH_KEY` : Clé privée SSH pour se connecter au Raspberry Pi
 
+#### Formulaire de contact (service `portfolio-mailer`)
+- `SMTP_USERNAME` : adresse de la boîte OVH qui envoie (ex: `noreply@cardinalexandre.fr`)
+- `SMTP_PASSWORD` : mot de passe de cette boîte
+- `SMTP_FROM` : expéditeur affiché, en général la même adresse que `SMTP_USERNAME`
+
+Les messages arrivent sur `dev@cardinalexandre.fr`, via `ssl0.ovh.net:465`.
+
 ### 2. Configuration Raspberry Pi
 
 #### Installation Docker

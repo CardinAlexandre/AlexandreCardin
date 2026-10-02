@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+*.user
+TestResults/
+
+# Secrets locaux
+.env
+
+# IDE / OS
+.vs/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

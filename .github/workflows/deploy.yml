@@ -11,9 +11,31 @@ env:
   REGISTRY: registry.cardinalexandre.fr
   IMAGE_NAME: portfolio
   CONTAINER_NAME: cardinalexandre
+  MAILER_IMAGE_NAME: portfolio-mailer
+  MAILER_CONTAINER_NAME: portfolio-mailer
   CONTAINER_PORT: 80
 
 jobs:
+  # ===========================================================================
+  # Job 0 — Tests
+  # Tests du service d'envoi du formulaire de contact
+  # ===========================================================================
+  test:
+    name: Test mailer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Run tests
+        run: dotnet test mailer/Mailer.slnx -c Release
+
   # ===========================================================================
   # Job 1 — Build & Push
   # Build l'image Docker pour ARM64 et la pousse sur le registry privé
@@ -22,6 +44,7 @@ jobs:
     name: Build & Push
     runs-on: ubuntu-latest
     environment: AlexandreCardin
+    needs: test
     outputs:
       image_tag: ${{ steps.meta.outputs.version }}
 
@@ -53,11 +76,31 @@ jobs:
         with:
           context: .
           platforms: linux/arm64
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Extract mailer metadata
+        id: meta-mailer
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.MAILER_IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push mailer image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./mailer
+          platforms: linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-mailer.outputs.tags }}
+          labels: ${{ steps.meta-mailer.outputs.labels }}
+          cache-from: type=gha,scope=mailer
+          cache-to: type=gha,mode=max,scope=mailer
 
   # ===========================================================================
   # Job 2 — Deploy
@@ -68,14 +111,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: AlexandreCardin
     needs: build
+    # Jamais de déploiement depuis une pull request : uniquement sur push vers master ou lancement manuel
+    if: github.event_name != 'pull_request'
 
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
         with:
           host: ${{ secrets.RASPBERRY_PI_HOST }}
           username: ${{ secrets.RASPBERRY_PI_USER }}
           key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
+          envs: SMTP_USERNAME,SMTP_PASSWORD,SMTP_FROM
           script: |
             set -e
 
@@ -86,6 +136,24 @@ jobs:
             echo "=== Login au registry ==="
             echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "$REGISTRY" \
               -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+            MAILER_IMAGE="$REGISTRY/${{ env.MAILER_IMAGE_NAME }}:latest"
+            MAILER="${{ env.MAILER_CONTAINER_NAME }}"
+
+            echo "=== Service mail : pull et redémarrage ==="
+            docker pull "$MAILER_IMAGE"
+            docker stop "$MAILER" 2>/dev/null || true
+            docker rm   "$MAILER" 2>/dev/null || true
+            # Pas de port publié : seul nginx (réseau proxy) peut joindre le service.
+            docker run -d               --name "$MAILER"               --restart unless-stopped               --network proxy               -e Smtp__Username="$SMTP_USERNAME"               -e Smtp__Password="$SMTP_PASSWORD"               -e Smtp__From="$SMTP_FROM"               "$MAILER_IMAGE"
+
+            sleep 5
+            if ! docker ps --filter "name=$MAILER" --filter "status=running" | grep -q "$MAILER"; then
+              echo "❌ Le service mail n'a pas démarré (secrets SMTP_* configurés ?)"
+              docker logs "$MAILER" --tail=30
+              exit 1
+            fi
+            echo "✅ Service mail démarré"
 
             echo "=== Pull de la nouvelle image ==="
             docker pull "$IMAGE"
@@ -128,12 +196,13 @@ jobs:
     name: Cleanup Runner
     runs-on: ubuntu-latest
     needs: [ build, deploy ]
-    if: always()
+    if: always() && github.event_name != 'pull_request'
 
     steps:
       - name: Remove images from runner
         run: |
           docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest || true
           docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} || true
+          docker rmi ${{ env.REGISTRY }}/${{ env.MAILER_IMAGE_NAME }}:latest || true
           docker image prune -f
           echo "✅ Nettoyage terminé"
