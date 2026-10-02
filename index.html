@@ -1,238 +1,765 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>Alexandre Cardin</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/assets/css/main.css" />
-		<link rel="icon" type="image/x-icon" href="/images/Alex.ico">
-		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Alexandre Cardin — Métal, bois, code</title>
+	<meta name="description" content="Alexandre Cardin, développeur C#/.NET full-stack à Toulouse. Ancien chaudronnier et ébéniste, il façonne aujourd'hui du logiciel." />
+	<meta name="theme-color" content="#0b0b0f" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Alexandre Cardin — Métal, bois, code" />
+	<meta property="og:description" content="D'abord le métal, puis le bois. Aujourd'hui, le code. Développeur C#/.NET full-stack à Toulouse." />
+	<meta property="og:image" content="/images/og.jpg" />
+	<link rel="icon" type="image/x-icon" href="/images/Alex.ico" />
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" />
+	<link rel="stylesheet" href="/assets/css/style.css?v=2026.11e" />
 
-				<!-- Header -->
-					<header id="header">
-						<div class="logo"></div>
-						<div class="content">
-							<div class="inner">
-								<h1>Alexandre Cardin</h1>
-								<p data-lang="fr" class="lang-text">Code addict en quête de nouvelles aventures digitales.</p>
-								<p data-lang="en" class="lang-text" style="display: none;">Code addict seeking new digital adventures.</p>
-							</div>
-						</div>
-						<nav>
+	<script>
+		/* Langue + état JS posés avant le premier rendu pour éviter tout flash */
+		(function () {
+			var d = document.documentElement, lang = 'fr';
+			try { lang = localStorage.getItem('portfolio-lang') || (navigator.language || '').slice(0, 2); } catch (e) {}
+			d.lang = lang === 'en' ? 'en' : 'fr';
+			d.classList.add('js');
+			try { if (sessionStorage.getItem('ac-seen')) d.classList.add('is-returning'); } catch (e) {}
+		})();
+	</script>
+</head>
+<body>
+
+	<!-- ============ LOADER ============ -->
+	<div class="loader" id="loader" aria-hidden="true">
+		<div class="loader__count"><span id="loader-count">000</span><sup>%</sup></div>
+		<div class="loader__words">
+			<span data-i18n="loader.1">métal</span>
+			<span data-i18n="loader.2">bois</span>
+			<span data-i18n="loader.3">code</span>
+			<span>Alexandre</span>
+		</div>
+		<div class="loader__bar"><i id="loader-bar"></i></div>
+	</div>
+
+	<!-- Rideau utilisé pour le changement de langue -->
+	<div class="curtain" id="curtain" aria-hidden="true"><span>FR ⇄ EN</span></div>
+
+	<!-- Grain + curseur -->
+	<div class="grain" aria-hidden="true"></div>
+	<div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label"></span></div></div>
+
+	<!-- ============ NAV ============ -->
+	<header class="nav">
+		<a href="#top" class="nav__logo" aria-label="Retour en haut">
+			<span>A</span><span>C</span><sup>®</sup>
+		</a>
+		<div class="nav__status">
+			<i class="pulse"></i>
+			<span data-i18n="nav.status">En mission · ouvert aux opportunités</span>
+			<span class="nav__clock">TLS <time id="clock">--:--</time></span>
+		</div>
+		<nav class="nav__links" aria-label="Navigation principale">
+			<a href="#histoire" data-i18n="nav.story">Histoire</a>
+			<a href="#code" data-i18n="nav.code">Code</a>
+			<a href="#humain" data-i18n="nav.human">Hors écran</a>
+			<a href="#contact" data-i18n="nav.contact">Contact</a>
+		</nav>
+		<div class="nav__actions">
+			<a class="nav__cv" id="cv-link" href="/CV-Alexandre-Cardin.pdf" target="_blank" rel="noopener" data-cursor="PDF">CV ↓</a>
+			<button class="nav__lang" id="lang-btn" type="button" aria-label="Switch language">
+				<span class="is-fr">FR</span><span class="is-en">EN</span>
+			</button>
+		</div>
+	</header>
+
+	<!-- HUD chapitre -->
+	<div class="hud" aria-hidden="true">
+		<span class="hud__num" id="hud-num">00</span>
+		<span class="hud__label" id="hud-label">Intro</span>
+		<span class="hud__track"><i id="hud-progress"></i></span>
+	</div>
+
+	<main id="top">
+
+		<!-- ============ ACTE 0 — HERO ============ -->
+		<section class="hero" data-chapter="00" data-chapter-label="Intro" data-i18n-attr="data-chapter-label:hud.intro">
+			<div class="hero__meta">
+				<span data-i18n="hero.meta">Toulouse, FR · 43.60°N 1.44°E</span>
+			</div>
+
+			<h1 class="hero__title" aria-label="Alexandre Cardin">
+				<span class="hero__line" data-split-letters>Alexandre</span>
+				<span class="hero__line hero__line--2" data-split-letters>Cardin</span>
+			</h1>
+
+			<figure class="hero__portrait" data-parallax="0.15">
+				<div class="hero__frame">
+					<img src="/images/portrait.webp" width="508" height="762" alt="Portrait d'Alexandre Cardin, souriant" data-i18n-attr="alt:hero.alt" />
+				</div>
+				<svg class="hero__badge" viewBox="0 0 200 200" aria-hidden="true">
+					<defs><path id="badge-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+					<text><textPath href="#badge-circle" textLength="488" lengthAdjust="spacing" data-i18n="hero.badge">✺ DÉVELOPPEUR C#/.NET ✺ FULL-STACK ✺ CODE ADDICT </textPath></text>
+				</svg>
+			</figure>
+
+			<!-- Stickers flottants -->
+			<div class="sticker sticker--pill" data-float="22"><span>C# / .NET</span></div>
+			<div class="sticker sticker--blob" data-float="-14"><span data-i18n="hero.st3">ancien<br/>artisan</span></div>
+
+			<p class="hero__intro" data-i18n="hero.intro">
+				Développeur <b>C#/.NET</b> full-stack. Avant le code, j'ai façonné le <em>métal</em> puis le <em>bois</em>.
+				Voici comment la matière est devenue du logiciel.
+			</p>
+
+			<a href="#manifeste" class="hero__scroll" data-cursor="Go">
+				<span data-i18n="hero.scroll">L'histoire commence ici</span>
+				<i>↓</i>
+			</a>
+		</section>
+
+		<!-- Bandes marquee croisées -->
+		<div class="bands" aria-hidden="true">
+			<div class="band band--main"><div class="band__track" data-marquee="1">
+				<span>C# ✺ .NET ✺ React ✺ Angular ✺ gRPC ✺ SignalR ✺ Docker ✺ RabbitMQ ✺ Redis ✺ DDS ✺&nbsp;</span>
+			</div></div>
+		</div>
+
+		<!-- ============ ACTE 1 — MANIFESTE ============ -->
+		<section class="manifesto" id="manifeste" data-chapter="01" data-chapter-label="Manifeste" data-i18n-attr="data-chapter-label:hud.manifesto">
+			<div class="manifesto__grid">
+				<div class="manifesto__copy">
+					<p class="kicker">(01) <span data-i18n="manifesto.kicker">Manifeste</span></p>
+					<span class="manifesto__mark" aria-hidden="true">«</span>
+					<p class="manifesto__text" data-scrub-words data-i18n="manifesto.text">
+						Avant d'écrire du code, j'ai <span class="chip chip--metal">⚒ frappé du métal</span>, <span class="chip chip--wood">raboté du bois</span>,
+						vécu à Montréal et pas mal voyagé. Aujourd'hui, j'écris du <span class="chip chip--code">{ code }</span>,
+						et j'apprends encore chaque jour.
+					</p>
+					<p class="manifesto__sign">— Alexandre</p>
+				</div>
+				<div class="swatches" aria-hidden="true">
+					<div class="swatch swatch--metal">
+						<i class="rivet"></i><i class="rivet"></i><i class="rivet"></i><i class="rivet"></i>
+						<span class="swatch__name" data-i18n="sw.metal">Métal</span>
+						<span class="swatch__place" data-i18n="sw.brittany">Bretagne</span>
+					</div>
+					<div class="swatch swatch--wood">
+						<span class="swatch__name" data-i18n="sw.wood">Bois</span>
+						<span class="swatch__place">Montréal</span>
+					</div>
+					<div class="swatch swatch--code">
+						<code><span class="t-k">while</span> (curious)<br/>{<br/>&nbsp;&nbsp;<span class="t-f">Learn</span>();<br/>}</code>
+						<span class="swatch__name">Code</span>
+						<span class="swatch__place">Toulouse</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============ ACTE 2 — HISTOIRE (scroll horizontal) ============ -->
+		<section class="story" id="histoire">
+			<div class="story__track">
+
+				<!-- 01 — Rouen -->
+				<article class="panel panel--rouen" data-chapter="02" data-chapter-label="Rouen">
+					<div class="panel__num">01</div>
+					<div class="panel__body">
+						<p class="panel__where">Rouen, Normandie</p>
+						<h2 class="panel__title"><span data-i18n="p1.t1">Là où</span> <em data-i18n="p1.t2">tout commence</em></h2>
+						<p class="panel__text" data-i18n="p1.text">J'ai grandi entouré de développeurs. Le code aurait pu être une évidence, mais je ne voulais pas m'y lancer directement : je voulais d'abord <b>vivre mes propres expériences</b>. Le code attendrait.</p>
+					</div>
+					<div class="sticker sticker--tag panel__sticker" data-i18n="p1.sticker">Made in Normandie</div>
+					<div class="panel__art art-rouen" aria-hidden="true">
+						<svg viewBox="0 0 300 300" class="art-rouen__ring">
+							<defs><path id="ring-rouen" d="M150,150 m-120,0 a120,120 0 1,1 240,0 a120,120 0 1,1 -240,0" /></defs>
+							<text><textPath href="#ring-rouen" textLength="750" lengthAdjust="spacing" data-i18n="p1.ring">GRANDI ENTOURÉ DE DÉVELOPPEURS ✺ GRANDI ENTOURÉ DE DÉVELOPPEURS ✺ </textPath></text>
+						</svg>
+						<span class="art-rouen__code">&lt;/&gt;</span>
+						<div class="todo">
+							<span class="todo__title" data-i18n="p1.todo">D'abord&nbsp;:</span>
 							<ul>
-								<li><a href="#intro" data-lang="fr">Intro</a><a href="#intro" data-lang="en" style="display: none;">Intro</a></li>
-								<li><a href="#work" data-lang="fr">Travail</a><a href="#work" data-lang="en" style="display: none;">Work</a></li>
-								<li><a href="#about" data-lang="fr">À propos</a><a href="#about" data-lang="en" style="display: none;">About</a></li>
-								<li><a href="#contact" data-lang="fr">Contact</a><a href="#contact" data-lang="en" style="display: none;">Contact</a></li>
-								<li><a href="/CV-Alexandre-Cardin.pdf" target="_blank" data-lang="fr">CV</a><a href="/English-Version-CV-Alexandre-Cardin.pdf" target="_blank" data-lang="en" style="display: none;">CV</a></li>
-								<!--<li><a href="#elements">Elements</a></li>-->
+								<li data-i18n="p1.todo1">un métier manuel</li>
+								<li data-i18n="p1.todo2">vivre ailleurs</li>
+								<li data-i18n="p1.todo3">voir du pays</li>
 							</ul>
-						</nav>
-						<!-- Language Switcher -->
-						<div class="language-switcher">
-							<button id="lang-btn" class="lang-btn" title="Switch language">
-								<span data-lang="fr">EN</span>
-								<span data-lang="en" style="display: none;">FR</span>
-							</button>
+							<span class="todo__then" data-i18n="p1.todo4">… le code, ensuite.</span>
 						</div>
-					</header>
+					</div>
+				</article>
 
-				<!-- Main -->
-					<div id="main">
+				<!-- 02 — Métal -->
+				<article class="panel panel--metal" data-chapter="03" data-chapter-label="Métal" data-i18n-attr="data-chapter-label:hud.metal">
+					<canvas class="sparks" aria-hidden="true"></canvas>
+					<div class="panel__num">02</div>
+					<div class="panel__body">
+						<p class="panel__where" data-i18n="p2.where">Compagnons du Devoir × Piriou · Bretagne · 1 an</p>
+						<h2 class="panel__title panel__title--chrome" data-i18n="p2.title">Métal</h2>
+						<p class="panel__text" data-i18n="p2.text">Une année de <b>chaudronnerie</b> : la formation chez les Compagnons du Devoir, l'entreprise chez <b>Piriou</b>, chantier naval en Bretagne. Plier, souder, ajuster au dixième. J'y apprends qu'une pièce bien faite ne pardonne aucune approximation.</p>
+					</div>
+					<div class="rain" aria-hidden="true"></div>
+					<div class="sticker sticker--bzh panel__sticker">BZH</div>
+					<div class="sticker sticker--tag panel__sticker panel__sticker--2" data-i18n="p2.rain">Il pleut (évidemment)</div>
+					<div class="panel__art art-ship" aria-hidden="true" data-cursor="Souder" data-i18n-attr="data-cursor:game.weldCursor">
+						<svg viewBox="0 0 600 400">
+							<defs>
+								<pattern id="truss" width="28" height="22" patternUnits="userSpaceOnUse">
+									<path d="M0 22 L14 0 L28 22" fill="none" stroke="#0b0b0f" stroke-width="3" />
+								</pattern>
+								<clipPath id="hull-clip">
+									<path d="M70 190 L520 182 L578 160 L548 262 C528 300 488 322 448 326 L150 326 C112 322 82 300 74 268 Z" />
+								</clipPath>
+							</defs>
 
-						<!-- Intro -->
-							<article id="intro">
-								<h2 class="major" data-lang="fr">Intro</h2>
-								<h2 class="major" data-lang="en" style="display: none;">Intro</h2>
-								<span class="image main"><img src="/images/pic01.jpg" alt="" /></span>
-								<p data-lang="fr">Bienvenue ! Je m'appelle Alexandre et je suis développeur full-stack basé à Toulouse.</p>
-								<p data-lang="en" style="display: none;">Welcome! My name is Alexandre and I'm a full-stack developer based in Toulouse.</p>
+							<!-- Sol du chantier et tins -->
+							<rect x="0" y="362" width="600" height="38" class="yard" />
+							<g class="blocks">
+								<rect x="150" y="326" width="28" height="36" /><rect x="236" y="326" width="28" height="36" />
+								<rect x="322" y="326" width="28" height="36" /><rect x="408" y="326" width="28" height="36" />
+							</g>
 
-								<p data-lang="fr">Depuis mon plus jeune âge, je suis passionné par le développement informatique et les possibilités infinies qu'offre le code pour donner vie à des produits digitaux innovants. Après l'obtention de mon diplôme de développeur d'application numérique, j'ai débuté ma carrière chez <a href="https://www.illinks.fr/">illinks</a>, où j'ai participé à des projets stimulants qui m'ont permis de consolider mes compétences et d'acquérir une solide expérience backend.</p>
-								<p data-lang="en" style="display: none;">Since my early years, I've been passionate about software development and the infinite possibilities that code offers to bring innovative digital products to life. After obtaining my digital application developer diploma, I started my career at <a href="https://www.illinks.fr/">illinks</a>, where I participated in stimulating projects that allowed me to consolidate my skills and acquire solid backend experience.</p>
+							<!-- Coque en construction -->
+							<path class="hull" d="M70 190 L520 182 L578 160 L548 262 C528 300 488 322 448 326 L150 326 C112 322 82 300 74 268 Z" />
+							<g clip-path="url(#hull-clip)">
+								<rect x="0" y="270" width="600" height="80" class="primer" />
+								<g class="plates">
+									<path d="M118 150 V340 M166 150 V340 M214 150 V340 M262 150 V340 M310 150 V340 M358 150 V340 M406 150 V340 M454 150 V340 M502 150 V340" />
+									<path d="M40 228 H600 M40 270 H600" />
+								</g>
+								<!-- Tôles pas encore posées : on voit les membrures -->
+								<g class="gap">
+									<rect x="262" y="186" width="48" height="42" /><path d="M274 186 V228 M286 186 V228 M298 186 V228" />
+									<rect x="406" y="228" width="48" height="42" /><path d="M418 228 V270 M430 228 V270 M442 228 V270" />
+								</g>
+								<g class="weld-beads"></g>
+							</g>
 
-								<p data-lang="fr">Par la suite, j'ai rejoint <a href="https://www.viveris.fr/">Viveris</a> en tant que consultant pour le client <a href="https://www.liebherr.com/">Liebherr</a>, où j'ai contribué au développement et à l'optimisation de solutions techniques dans un environnement exigeant et collaboratif.</p>
-								<p data-lang="en" style="display: none;">Subsequently, I joined <a href="https://www.viveris.fr/">Viveris</a> as a consultant for the <a href="https://www.liebherr.com/">Liebherr</a> client, where I contributed to the development and optimization of technical solutions in a demanding and collaborative environment.</p>
+							<!-- Mini-jeu : le joint à souder -->
+							<path class="weld-guide" d="M118 228 H470" />
+							<path class="weld-zone" d="M118 228 H470" />
+							<circle class="weld-end" cx="470" cy="228" r="7" />
+							<circle class="weld-start" cx="118" cy="228" r="9" />
 
-								<p data-lang="fr">Aujourd'hui, je suis spécialisé dans le développement C#/.NET, tout en ayant une expérience full-stack, et je suis en quête de nouveaux défis. Mon ambition est de mettre mon expertise sur les technologies Microsoft et mes compétences transverses au service de projets ambitieux, innovants et à forte valeur ajoutée.</p>
-								<p data-lang="en" style="display: none;">Today, I'm specialized in C#/.NET development, while having full-stack experience, and I'm seeking new challenges. My ambition is to put my expertise in Microsoft technologies and my cross-functional skills at the service of ambitious, innovative, and high-value-added projects.</p>
+							<!-- Superstructure + échafaudage -->
+							<rect class="deckhouse" x="390" y="128" width="96" height="58" />
+							<g class="windows"><rect x="402" y="142" width="16" height="12" /><rect x="430" y="142" width="16" height="12" /><rect x="458" y="142" width="16" height="12" /></g>
+							<path class="scaffold" d="M372 186 V110 M500 184 V110 M372 110 H500 M372 148 H500 M372 110 L500 148 M372 148 L500 110" />
 
-								<p data-lang="fr">N'hésitez pas à me contacter si vous souhaitez collaborer : je suis motivé à l'idée d'apporter mon savoir-faire et mon énergie à vos projets.</p>
-								<p data-lang="en" style="display: none;">Don't hesitate to contact me if you wish to collaborate: I'm motivated by the idea of bringing my expertise and energy to your projects.</p>
-							</article>
+							<!-- Portique -->
+							<g class="gantry">
+								<rect x="34" y="70" width="16" height="292" /><rect x="550" y="70" width="16" height="292" />
+								<rect x="20" y="52" width="560" height="22" />
+								<rect x="20" y="52" width="560" height="22" fill="url(#truss)" />
+							</g>
+							<g class="trolley">
+								<rect x="280" y="74" width="40" height="14" class="trolley__cart" />
+								<g class="load">
+									<line x1="300" y1="88" x2="300" y2="168" class="cable" />
+									<path d="M300 168 V176 M290 176 L300 168 L310 176" class="cable" />
+									<rect x="250" y="176" width="100" height="10" class="plate" />
+								</g>
+							</g>
 
-						<!-- Work -->
-							<article id="work">
-								<h2 class="major" data-lang="fr">Travail</h2>
-								<h2 class="major" data-lang="en" style="display: none;">Work</h2>
-								<span class="image main"><img src="/images/pic02.jpg" alt="" /></span>
-								<p data-lang="fr">Depuis mes débuts, j'ai toujours été animé par l'envie de comprendre comment la technologie pouvait transformer les processus et simplifier le quotidien. C'est ce qui m'a conduit à rejoindre <a href="https://www.illinks.fr/">illinks</a>, où j'ai travaillé pendant deux ans comme développeur Angular / .NET. J'y ai découvert le monde exigeant de la GED, en connectant notre solution aux logiciels métiers de cabinets comptables et en développant des web services en C# .NET pour automatiser des traitements documentaires. Cette expérience m'a permis de consolider mes bases techniques tout en répondant directement aux besoins concrets des utilisateurs.</p>
-								<p data-lang="en" style="display: none;">From the beginning, I've always been driven by the desire to understand how technology could transform processes and simplify daily life. This is what led me to join <a href="https://www.illinks.fr/">illinks</a>, where I worked for two years as an Angular / .NET developer. I discovered the demanding world of EDM, connecting our solution to accounting firms' business software and developing C# .NET web services to automate document processing. This experience allowed me to consolidate my technical foundations while directly addressing users' concrete needs.</p>
+							<!-- Gwenn-ha-Du -->
+							<line x1="470" y1="52" x2="470" y2="-44" class="pole" />
+							<g transform="translate(471 -42) scale(1.7)">
+								<g class="flag">
+									<rect width="72" height="45" fill="#f7f7f7" />
+									<path d="M0 5 H72 V10 H0 Z M0 15 H72 V20 H0 Z M0 25 H72 V30 H0 Z M0 35 H72 V40 H0 Z" fill="#0b0b0f" />
+									<rect width="31" height="25" fill="#f7f7f7" />
+									<g fill="#0b0b0f">
+										<path d="M6 5 l2 -3 l2 3 l-2 5 z" /><path d="M16 5 l2 -3 l2 3 l-2 5 z" /><path d="M25 5 l2 -3 l2 3 l-2 5 z" />
+										<path d="M11 15 l2 -3 l2 3 l-2 5 z" /><path d="M21 15 l2 -3 l2 3 l-2 5 z" />
+									</g>
+									<rect width="72" height="45" fill="none" stroke="#0b0b0f" stroke-width="1.2" />
+								</g>
+							</g>
+						</svg>
+						<div class="scoreboard scoreboard--steel">
+							<span class="scoreboard__item"><small data-i18n="game.weld">Soudure</small><b class="weld-last">—</b></span>
+							<span class="scoreboard__item"><small data-i18n="game.best">Record</small><b class="weld-best">—</b></span>
+							<span class="scoreboard__hint" data-i18n="game.weldHint">Maintiens le clic sur le point vert et suis le pointillé</span>
+						</div>
+					</div>
+				</article>
 
-								<p data-lang="fr">En juillet 2024, j'ai choisi de relever un nouveau défi en intégrant <a href="https://www.viveris.fr/">Viveris</a> comme développeur React / .NET, pour intervenir chez <a href="https://www.liebherr.com/">Liebherr</a> sur un projet ambitieux de Fleet Management System (FMS) dans le secteur minier. J'y travaille au quotidien dans un environnement international, où la communication en anglais est essentielle, que ce soit lors des cérémonies Scrum ou des différents meetings. Je collabore étroitement avec les Product Owners afin de bien comprendre les attentes métiers et de garantir une production de qualité, en phase avec les besoins stratégiques du projet.</p>
-								<p data-lang="en" style="display: none;">In July 2024, I chose to take on a new challenge by joining <a href="https://www.viveris.fr/">Viveris</a> as a React / .NET developer, to work at <a href="https://www.liebherr.com/">Liebherr</a> on an ambitious Fleet Management System (FMS) project in the mining sector. I work daily in an international environment, where English communication is essential, whether during Scrum ceremonies or various meetings. I collaborate closely with Product Owners to understand business expectations and ensure quality production, aligned with the project's strategic needs.</p>
+				<!-- 03 — Bois -->
+				<article class="panel panel--wood" data-chapter="04" data-chapter-label="Bois" data-i18n-attr="data-chapter-label:hud.wood">
+					<svg class="wood-grain" aria-hidden="true">
+						<filter id="grain-wood"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.12" numOctaves="3" seed="7" /><feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.27  0 0 0 0 0.1  0 0 0 0.9 0" /></filter>
+						<rect width="100%" height="100%" filter="url(#grain-wood)" />
+					</svg>
+					<div class="snow" aria-hidden="true"></div>
+					<div class="snow snow--near" aria-hidden="true"></div>
 
-								<p data-lang="fr">Mon rôle couvre principalement l'internationalisation et l'industrialisation du produit, ainsi que l'ajout de nouvelles fonctionnalités. Ce projet est aussi une formidable opportunité d'élargir mon expertise sur des technologies modernes telles que DDS, gRPC, Docker, Redis, SignalR et RabbitMQ, tout en perfectionnant mes pratiques de travail en équipe agile.</p>
-								<p data-lang="en" style="display: none;">My role covers mainly product internationalization and industrialization, as well as adding new features. This project is also a fantastic opportunity to expand my expertise on modern technologies such as DDS, gRPC, Docker, Redis, SignalR, and RabbitMQ, while perfecting my agile team work practices.</p>
-
-								<p data-lang="fr">Aujourd'hui, je continue à enrichir mon expertise full-stack et à approfondir ma maîtrise des technologies Microsoft. Mon ambition est de mettre cette expérience au service de projets innovants et stimulants, tout en poursuivant mon apprentissage et en relevant de nouveaux défis.</p>
-								<p data-lang="en" style="display: none;">Today, I continue to enrich my full-stack expertise and deepen my mastery of Microsoft technologies. My ambition is to put this experience at the service of innovative and stimulating projects, while continuing my learning and taking on new challenges.</p>
-							</article>
-
-						<!-- About -->
-							<article id="about">
-								<h2 class="major" data-lang="fr">À propos</h2>
-								<h2 class="major" data-lang="en" style="display: none;">About</h2>
-								<span class="image main"><img src="/images/pic03.jpg" alt="" /></span>
-								<p data-lang="fr">Je m'appelle Alexandre et je suis originaire de Rouen. J'apprécie beaucoup le sport, en particulier le basket et le
-								tennis. Je suis également motard et j'adore parcourir les routes à moto pendant mon temps libre.</p>
-								<p data-lang="en" style="display: none;">My name is Alexandre and I'm originally from Rouen. I really enjoy sports, especially basketball and
-								tennis. I'm also a motorcyclist and I love riding the roads on my bike in my free time.</p>
-
-								<p data-lang="fr">J'ai vécu 3 ans à Montréal où j'ai suivi des études d'ébéniste, après avoir fait 1 année aux compagnons du devoir en
-								chaudronnerie. J'ai toujours été attiré par les métiers manuels et la fabrication artisanale. Réaliser de mes mains des
-								pièces uniques m'a toujours beaucoup plu.</p>
-								<p data-lang="en" style="display: none;">I lived 3 years in Montreal where I studied cabinetmaking, after doing 1 year with the compagnons du devoir in
-								metalworking. I've always been attracted to manual trades and artisanal manufacturing. Creating unique pieces with my hands
-								has always pleased me greatly.</p>
-
-								<p data-lang="fr">À mon retour du Canada, je me suis installé à Toulouse pour retrouver le soleil après le froid canadien, mais aussi et
-								surtout parce que l'école dans laquelle je souhaitais me former au développement web était située dans cette ville.</p>
-								<p data-lang="en" style="display: none;">Upon my return from Canada, I settled in Toulouse to find the sun again after the Canadian cold, but also and
-								especially because the school where I wanted to train in web development was located in this city.</p>
-
-								<p data-lang="fr">Bien que j'ai grandi dans un environnement rempli de développeurs, j'avais choisi plus jeune de me diriger vers d'autres
-								domaines que l'informatique. Cependant, de retour en France, je me suis lancé dans une carrière de développeur web qui
-								s'est avérée être une suite naturelle pour moi.</p>
-								<p data-lang="en" style="display: none;">Although I grew up in an environment full of developers, I had chosen when I was younger to go into other
-								fields than computer science. However, upon returning to France, I launched into a web developer career that
-								proved to be a natural continuation for me.</p>
-
-								<p data-lang="fr">Aujourd'hui, coder et créer des applications est autant une passion que la création manuelle que j'ai pu expérimenter.
-								Je trouve beaucoup de satisfaction à mêler logique et créativité dans mon travail au quotidien. Mon parcours atypique me
-								permet d'apporter une vision différente en développement.</p>
-								<p data-lang="en" style="display: none;">Today, coding and creating applications is as much a passion as the manual creation I was able to experience.
-								I find great satisfaction in mixing logic and creativity in my daily work. My atypical background allows me
-								to bring a different perspective to development.</p>
-							</article>
-
-						<!-- Contact -->
-							<article id="contact">
-								<h2 class="major" data-lang="fr">Contact</h2>
-								<h2 class="major" data-lang="en" style="display: none;">Contact</h2>
-								<form method="post" action="sendmail">
-									<div class="fields">
-										<div class="field half">
-											<label for="name" data-lang="fr">Nom</label>
-											<label for="name" data-lang="en" style="display: none;">Name</label>
-											<input type="text" name="name" id="name" />
-										</div>
-										<div class="field half">
-											<label for="email" data-lang="fr">Email</label>
-											<label for="email" data-lang="en" style="display: none;">Email</label>
-											<input type="text" name="email" id="email" />
-										</div>
-										<div class="field">
-											<label for="message" data-lang="fr">Message</label>
-											<label for="message" data-lang="en" style="display: none;">Message</label>
-											<textarea name="message" id="message" rows="4"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><button type="submit" class="btn primary" id="submitBtn" data-lang="fr">Envoyer le message</button><button type="submit" class="btn primary" id="submitBtn" data-lang="en" style="display: none;">Send Message</button></li>
-										<li><input type="reset" value="Reset" data-lang="fr" /><input type="reset" value="Reset" data-lang="en" style="display: none;" /></li>
-									</ul>
-								</form>
-								<ul class="icons">
-									<li><a href="https://github.com/PrieurA" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-									<li><a href="https://www.linkedin.com/in/alexandre-prieur/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
-								</ul>
-							</article>
+					<!-- Feuilles d'érable qui tombent -->
+					<svg width="0" height="0" class="defs" aria-hidden="true">
+						<symbol id="maple-leaf" viewBox="-2015 -2000 4030 4030">
+							<path d="m-90 2030 45-863a95 95 0 0 0-111-98l-859 151 116-320a65 65 0 0 0-20-73l-941-762 212-99a65 65 0 0 0 34-79l-186-572 542 115a65 65 0 0 0 73-38l105-247 423 454a65 65 0 0 0 111-57l-204-1052 327 189a65 65 0 0 0 91-27l332-652 332 652a65 65 0 0 0 91 27l327-189-204 1052a65 65 0 0 0 111 57l423-454 105 247a65 65 0 0 0 73 38l542-115-186 572a65 65 0 0 0 34 79l212 99-941 762a65 65 0 0 0-20 73l116 320-859-151a95 95 0 0 0-111 98l45 863z" />
+						</symbol>
+					</svg>
+					<div class="maples" aria-hidden="true">
+						<svg class="maple"><use href="#maple-leaf" /></svg>
+						<svg class="maple"><use href="#maple-leaf" /></svg>
+						<svg class="maple"><use href="#maple-leaf" /></svg>
+						<svg class="maple"><use href="#maple-leaf" /></svg>
+						<svg class="maple"><use href="#maple-leaf" /></svg>
+						<svg class="maple"><use href="#maple-leaf" /></svg>
 					</div>
 
-				<!-- Footer -->
-					<footer id="footer">
-					</footer>
+					<!-- Congère + caribou -->
+					<svg class="snowbank" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
+						<path d="M0 60 C 120 20, 220 70, 340 45 S 560 10, 680 50 S 880 30, 1000 55 L1000 120 L0 120 Z" />
+					</svg>
+					<svg class="caribou" viewBox="0 0 200 170" aria-hidden="true">
+						<g class="caribou__antlers">
+							<path d="M44 52 C40 34 46 16 60 6 M44 38 L32 30 M47 25 L40 12 M54 13 L58 2 M42 48 L28 44" />
+							<path d="M50 50 C56 34 66 24 82 20 M60 32 L60 18 M70 25 L76 12 M78 21 L90 16" />
+						</g>
+						<path class="caribou__body" d="M62 84 C60 70 80 64 110 65 C136 66 152 70 160 82 C164 90 160 104 150 108 L72 108 C64 104 60 94 62 84 Z
+							M70 88 C62 76 56 66 50 58 L48 52 L38 52 C32 52 28 56 26 60 L22 68 C24 72 30 72 34 69 L42 66 C48 76 54 86 60 96 Z
+							M160 82 L170 76 L168 86 Z" />
+						<path class="caribou__mane" d="M54 66 C52 74 58 86 66 92 C68 84 64 74 58 66 Z" />
+						<g class="caribou__legs">
+							<path d="M74 104 L72 150 L80 150 L82 104 Z" /><path d="M88 104 L90 150 L98 150 L96 104 Z" />
+							<path d="M136 104 L134 150 L142 150 L144 104 Z" /><path d="M150 102 L154 150 L162 150 L158 100 Z" />
+						</g>
+						<circle class="caribou__eye" cx="36" cy="58" r="2" />
+					</svg>
+
+					<div class="panel__num">03</div>
+					<div class="panel__body">
+						<p class="panel__where" data-i18n="p3.where">Montréal, Québec · 3 ans</p>
+						<h2 class="panel__title" data-i18n="p3.title">Bois</h2>
+						<p class="panel__text" data-i18n="p3.text">Trois ans d'<b>ébénisterie</b> à Montréal. Fabriquer de mes mains des pièces uniques, par −30&nbsp;°C. Le goût du travail bien fini, il vient de là.</p>
+					</div>
+					<div class="sticker sticker--temp panel__sticker">−30°C</div>
+					<div class="panel__art art-wood" aria-hidden="true" data-cursor="Lancer !" data-i18n-attr="data-cursor:p3.throw">
+						<svg viewBox="0 0 300 300">
+							<ellipse cx="150" cy="150" rx="140" ry="134" class="bark" />
+							<ellipse cx="150" cy="150" rx="126" ry="121" class="core" />
+							<g class="rings">
+								<ellipse cx="152" cy="148" rx="112" ry="106" /><ellipse cx="154" cy="147" rx="96" ry="92" /><ellipse cx="151" cy="149" rx="80" ry="77" />
+								<ellipse cx="149" cy="151" rx="64" ry="62" /><ellipse cx="150" cy="149" rx="48" ry="46" /><ellipse cx="151" cy="150" rx="32" ry="31" /><ellipse cx="150" cy="150" rx="16" ry="15" />
+							</g>
+							<path d="M150 150 L232 96 L250 92" class="crack" />
+						</svg>
+						<!-- Feuilles qui tombent devant le rondin : les cibles du lancer de haches -->
+						<div class="maples maples--log">
+							<svg class="maple"><use href="#maple-leaf" /></svg>
+							<svg class="maple"><use href="#maple-leaf" /></svg>
+							<svg class="maple"><use href="#maple-leaf" /></svg>
+							<svg class="maple"><use href="#maple-leaf" /></svg>
+						</div>
+						<div class="scoreboard">
+							<span class="scoreboard__item"><small data-i18n="game.score">Score</small><b class="scoreboard__score">0</b></span>
+							<span class="scoreboard__item"><small>Combo</small><b class="scoreboard__combo">x0</b></span>
+							<span class="scoreboard__hint" data-i18n="game.hint">Vise les feuilles d'érable</span>
+						</div>
+					</div>
+				</article>
+
+				<!-- 04 — Soleil -->
+				<article class="panel panel--sun" data-chapter="05" data-chapter-label="Toulouse">
+					<!-- Croquis de Toulouse à l'heure dorée -->
+					<svg class="skyline" viewBox="0 0 1000 420" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
+						<defs>
+							<pattern id="tl-bricks" width="24" height="10" patternUnits="userSpaceOnUse">
+								<rect width="24" height="10" fill="#d9775b" /><path d="M0 5 H24 M12 0 V5 M0 5 V10 M24 5 V10" stroke="#b5563f" stroke-width="1" />
+							</pattern>
+							<!-- Léger tremblé pour l'effet croquis à main levée -->
+							<filter id="tl-sketch" x="-5%" y="-5%" width="110%" height="110%">
+								<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n" />
+								<feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" />
+							</filter>
+							<pattern id="tl-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+								<line x1="0" y1="0" x2="0" y2="7" stroke="#6b2f1f" stroke-width="1.2" />
+							</pattern>
+						</defs>
+						<circle class="skyline__sun" cx="470" cy="300" r="120" />
+						<path class="skyline__far" d="M0 300 V262 L30 250 L60 262 V240 L95 228 L125 244 V256 L190 238 L230 252 V230 L260 220 L300 236 V258 L360 246 L400 256 V236 L440 228 L480 244 V262 L540 250 L580 262 V240 L640 232 L660 248 V262 L1000 262 V300 Z" />
+
+						<!-- Dôme de la Grave -->
+						<g class="sk">
+							<rect x="100" y="228" width="80" height="74" class="bricks" />
+							<rect x="116" y="198" width="48" height="30" class="bricks" />
+							<path d="M112 200 Q140 132 168 200 Z" class="dome" />
+							<rect x="135" y="150" width="10" height="14" class="dome" />
+							<path d="M133 152 Q140 140 147 152 Z" class="dome" />
+							<rect x="100" y="228" width="80" height="74" fill="url(#tl-hatch)" opacity=".18" />
+						</g>
+
+						<!-- Saint-Sernin -->
+						<g class="sk">
+							<rect x="680" y="252" width="220" height="58" class="bricks" />
+							<path d="M672 254 L700 236 H880 L908 254 Z" class="roof" />
+							<rect x="760" y="200" width="60" height="54" class="bricks" />
+							<rect x="766" y="168" width="48" height="32" class="bricks" />
+							<rect x="772" y="140" width="36" height="28" class="bricks" />
+							<rect x="778" y="116" width="24" height="24" class="bricks" />
+							<rect x="783" y="96" width="14" height="20" class="bricks" />
+							<path d="M783 96 L790 46 L797 96 Z" class="roof" />
+							<g class="win">
+								<path d="M772 246 v-14 l5 -7 l5 7 v14 z" /><path d="M787 246 v-14 l5 -7 l5 7 v14 z" /><path d="M802 246 v-14 l5 -7 l5 7 v14 z" />
+								<path d="M774 194 v-12 l4 -6 l4 6 v12 z" /><path d="M786 194 v-12 l4 -6 l4 6 v12 z" /><path d="M798 194 v-12 l4 -6 l4 6 v12 z" />
+								<path d="M780 164 v-10 l3 -5 l3 5 v10 z" /><path d="M794 164 v-10 l3 -5 l3 5 v10 z" />
+								<path d="M787 136 v-10 l3 -5 l3 5 v10 z" />
+								<path d="M700 300 v-24 l7 -9 l7 9 v24 z" /><path d="M730 300 v-24 l7 -9 l7 9 v24 z" /><path d="M840 300 v-24 l7 -9 l7 9 v24 z" /><path d="M870 300 v-24 l7 -9 l7 9 v24 z" />
+							</g>
+							<rect x="680" y="252" width="220" height="58" fill="url(#tl-hatch)" opacity=".15" />
+						</g>
+
+						<!-- Quais + Pont-Neuf -->
+						<g class="sk">
+							<rect x="0" y="300" width="210" height="38" class="bricks" />
+							<rect x="670" y="310" width="330" height="28" class="bricks" />
+							<rect x="200" y="298" width="480" height="40" class="bricks" />
+							<g class="water">
+								<path d="M222 338 A38 30 0 0 1 298 338 Z" /><path d="M317 338 A38 30 0 0 1 393 338 Z" /><path d="M412 338 A38 30 0 0 1 488 338 Z" />
+								<path d="M507 338 A38 30 0 0 1 583 338 Z" /><path d="M602 338 A38 30 0 0 1 678 338 Z" />
+								<circle cx="307" cy="314" r="6" /><circle cx="402" cy="314" r="6" /><circle cx="497" cy="314" r="6" /><circle cx="592" cy="314" r="6" />
+							</g>
+						</g>
+
+						<!-- Garonne -->
+						<rect x="0" y="338" width="1000" height="82" class="garonne" />
+						<path class="ripples" d="M380 352 H560 M410 366 H530 M430 380 H510 M60 360 H180 M720 362 H880 M120 392 H260 M640 396 H820" />
+					</svg>
+
+					<!-- Croix occitane… en brique -->
+					<svg class="sun" viewBox="0 0 400 400" aria-hidden="true">
+						<defs>
+							<pattern id="cross-bricks" width="20" height="9" patternUnits="userSpaceOnUse">
+								<rect width="20" height="9" fill="#d9775b" /><path d="M0 4.5 H20 M10 0 V4.5 M0 4.5 V9 M20 4.5 V9" stroke="#a94c36" stroke-width="1.2" />
+							</pattern>
+						</defs>
+						<g class="occitan">
+							<g>
+								<path d="M200 200 L178 140 Q200 148 222 140 Z" />
+								<circle cx="178" cy="134" r="8" /><circle cx="200" cy="129" r="8" /><circle cx="222" cy="134" r="8" />
+							</g>
+							<g transform="rotate(90 200 200)">
+								<path d="M200 200 L178 140 Q200 148 222 140 Z" />
+								<circle cx="178" cy="134" r="8" /><circle cx="200" cy="129" r="8" /><circle cx="222" cy="134" r="8" />
+							</g>
+							<g transform="rotate(180 200 200)">
+								<path d="M200 200 L178 140 Q200 148 222 140 Z" />
+								<circle cx="178" cy="134" r="8" /><circle cx="200" cy="129" r="8" /><circle cx="222" cy="134" r="8" />
+							</g>
+							<g transform="rotate(270 200 200)">
+								<path d="M200 200 L178 140 Q200 148 222 140 Z" />
+								<circle cx="178" cy="134" r="8" /><circle cx="200" cy="129" r="8" /><circle cx="222" cy="134" r="8" />
+							</g>
+						</g>
+					</svg>
+					<div class="sticker sticker--tag panel__sticker" data-i18n="p4.sticker">La Ville rose</div>
+					<div class="panel__num">04</div>
+					<div class="panel__body">
+						<p class="panel__where">Toulouse, Occitanie</p>
+						<h2 class="panel__title"><span data-i18n="p4.t1">Cap au</span> <em data-i18n="p4.t2">soleil</em></h2>
+						<p class="panel__text" data-i18n="p4.text">Retour en France. Direction Toulouse, pour le soleil après le froid canadien… et surtout pour l'école où je voulais apprendre le <b>développement</b>. Une suite naturelle, finalement.</p>
+					</div>
+					<!-- Mini-jeu : attraper les rayons de soleil avec une brique -->
+					<canvas class="sunrays" aria-hidden="true"></canvas>
+					<div class="brick-catcher" aria-hidden="true" data-cursor="Attrape" data-i18n-attr="data-cursor:game.grab"></div>
+					<div class="scoreboard scoreboard--brick" aria-hidden="true">
+						<span class="scoreboard__item"><small data-i18n="game.score">Score</small><b class="sun-score">0</b></span>
+						<span class="scoreboard__item"><small>Combo</small><b class="sun-combo">x0</b></span>
+						<span class="scoreboard__hint" data-i18n="game.sunHint">Clique sur la brique pour l'attraper, puis attrape les rayons de soleil</span>
+					</div>
+				</article>
+
+				<!-- 05 — Code -->
+				<article class="panel panel--code" data-chapter="06" data-chapter-label="Code">
+					<!-- L'homme à tête d'écran cathodique, en noir et blanc -->
+					<svg class="crt-man" viewBox="0 0 400 640" aria-hidden="true">
+						<defs>
+							<pattern id="crt-scan" width="4" height="4" patternUnits="userSpaceOnUse">
+								<rect width="4" height="2" fill="#ffffff" opacity=".07" />
+							</pattern>
+							<clipPath id="crt-screen-clip"><rect x="128" y="58" width="144" height="104" rx="18" /></clipPath>
+						</defs>
+
+						<!-- Câble d'alimentation qui pend jusqu'au sol -->
+						<path class="crt-cable" d="M318 150 C352 170 344 230 360 290 C376 350 330 380 352 450 C368 500 380 560 366 612" />
+						<!-- Easter egg : la prise murale apparaît quand on attrape la fiche -->
+						<g class="crt-socket" transform="translate(52 520)" opacity="0">
+							<rect class="g-case" x="-20" y="-28" width="40" height="56" rx="6" />
+							<rect class="g-dark" x="-9" y="-12" width="5" height="14" rx="2" />
+							<rect class="g-dark" x="4" y="-12" width="5" height="14" rx="2" />
+							<circle class="g-dark" cx="0" cy="13" r="3.5" />
+						</g>
+						<g class="crt-plug-g" transform="translate(366 613)">
+							<path class="crt-plug" d="M-10 -7 h20 v14 h-20 z M-6 7 v8 M6 7 v8" />
+						</g>
+						<circle class="crt-plug-hit" cx="366" cy="613" r="26" data-cursor="Attrape" data-i18n-attr="data-cursor:game.grab" />
+
+						<!-- Corps -->
+						<g class="crt-body">
+							<path class="g-mid" d="M168 600 L186 600 L200 470 L214 600 L232 600 L272 420 L128 420 Z" />
+							<path class="g-dark" d="M126 600 L190 600 Q192 618 176 621 L118 621 Q110 610 126 600 Z" />
+							<path class="g-dark" d="M210 600 L274 600 Q290 610 282 621 L224 621 Q208 618 210 600 Z" />
+							<path class="g-jacket" d="M110 252 Q120 228 170 222 L230 222 Q280 228 290 252 L300 424 L100 424 Z" />
+							<path class="g-light" d="M178 222 L200 272 L222 222 Z" />
+							<path class="g-dark" d="M195 232 L205 232 L209 300 L200 314 L191 300 Z" />
+							<path class="g-lapel" d="M170 222 L196 292 L176 304 L150 242 Z" />
+							<path class="g-lapel" d="M230 222 L204 292 L224 304 L250 242 Z" />
+							<path class="g-jacket" d="M110 252 C96 302 92 362 100 412 L124 412 C122 362 126 312 134 270 Z" />
+							<path class="g-jacket" d="M290 252 C304 302 308 362 300 412 L276 412 C278 362 274 312 266 270 Z" />
+							<ellipse class="g-skin" cx="112" cy="422" rx="13" ry="15" />
+							<ellipse class="g-skin" cx="288" cy="422" rx="13" ry="15" />
+							<path class="crt-line" d="M200 330 V420 M186 350 h-1 M186 385 h-1" />
+							<rect class="g-mid" x="166" y="206" width="68" height="18" rx="4" />
+						</g>
+
+						<!-- Tête : un vieil écran cathodique -->
+						<g class="crt-head">
+							<path class="g-shade" d="M110 40 L140 22 L322 22 L292 40 Z" />
+							<path class="g-shade-dark" d="M292 40 L322 22 L322 174 L292 192 Z" />
+							<rect class="g-case" x="110" y="40" width="182" height="152" rx="12" />
+							<rect class="crt-screen" x="128" y="58" width="144" height="104" rx="18" />
+							<g clip-path="url(#crt-screen-clip)">
+								<rect class="crt-scanlines" x="128" y="58" width="144" height="104" fill="url(#crt-scan)" />
+								<text class="crt-text" x="200" y="118" text-anchor="middle">{ C# }</text>
+								<rect class="crt-cursor" x="232" y="124" width="14" height="4" />
+								<rect class="crt-off" x="128" y="58" width="144" height="104" opacity="0" />
+								<g class="crt-bootui" opacity="0">
+									<text class="crt-boot" x="200" y="104" text-anchor="middle">BOOT</text>
+									<rect class="crt-bar-bg" x="152" y="118" width="96" height="8" />
+									<rect class="crt-bar" x="152" y="118" width="0" height="8" />
+								</g>
+								<path class="crt-glare" d="M138 66 Q170 60 200 64 Q160 74 142 96 Z" />
+							</g>
+							<rect class="crt-screen-rim" x="128" y="58" width="144" height="104" rx="18" />
+							<path class="crt-line" d="M134 174 h36 M134 180 h36 M134 186 h36" />
+							<circle class="g-dark" cx="258" cy="179" r="5" />
+							<circle class="g-dark" cx="276" cy="179" r="5" />
+							<rect class="g-shade" x="186" y="173" width="30" height="10" rx="2" />
+						</g>
+											<g class="crt-bolts" opacity="0">
+							<path d="M92 72 l16 12 l-11 6 l18 14" /><path d="M326 52 l-13 16 l11 4 l-15 18" />
+							<path d="M78 300 l18 6 l-9 11 l20 7" /><path d="M334 318 l-15 9 l11 8 l-18 12" />
+							<path d="M120 470 l-14 10 l10 6 l-16 12" /><path d="M286 476 l14 10 l-10 6 l16 12" />
+							<path d="M40 470 l10 -14 l6 8 l10 -16" />
+						</g>
+					</svg>
+					<div class="panel__num">05</div>
+					<div class="panel__body">
+						<p class="panel__where" data-i18n="p5.where">Diplôme de développeur d'applications</p>
+						<h2 class="panel__title panel__title--glitch" data-text="Code">Code</h2>
+						<pre class="terminal" aria-label="while alive: learn, build, ship"><code><span class="t-c" data-i18n="p5.comment">// la matière a changé, pas le geste</span>
+<span class="t-k">while</span> (alexandre.<span class="t-f">IsAlive</span>)
+{
+    <span class="t-f">Learn</span>();
+    <span class="t-f">Build</span>();
+    <span class="t-f">Ship</span>();
+}<span class="caret">▌</span></code></pre>
+					</div>
+				</article>
+
 			</div>
-		<!-- BG -->
-		<div id="bg"></div>
-		<!-- Scripts -->
-			<script src="/assets/js/jquery.min.js"></script>
-			<script src="/assets/js/browser.min.js"></script>
-			<script src="/assets/js/breakpoints.min.js"></script>
-			<script src="/assets/js/util.js"></script>
-			<script src="/assets/js/main.js"></script>
+		</section>
 
-		<!-- Language Switcher -->
-		<script>
-		(function() {
-			let currentLanguage = 'fr';
-			
-			function initLanguage() {
-				// Get saved language preference
-				const savedLang = localStorage.getItem('portfolio-lang');
-				if (savedLang === 'en' || savedLang === 'fr') {
-					currentLanguage = savedLang;
-				}
-				
-				updateLanguageDisplay();
-				setupLanguageButton();
-			}
-			
-			function setupLanguageButton() {
-				const langButton = document.getElementById('lang-btn');
-				if (langButton) {
-					// Remove existing listeners by cloning the button
-					const newButton = langButton.cloneNode(true);
-					langButton.parentNode.replaceChild(newButton, langButton);
-					
-					// Add click listener
-					newButton.addEventListener('click', function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						toggleLanguage();
-					});
-				}
-			}
-			
-			function toggleLanguage() {
-				currentLanguage = currentLanguage === 'fr' ? 'en' : 'fr';
-				localStorage.setItem('portfolio-lang', currentLanguage);
-				updateLanguageDisplay();
-			}
-			
-			function updateLanguageDisplay() {
-				const elements = document.querySelectorAll('[data-lang]');
-				elements.forEach(function(element) {
-					const elementLang = element.getAttribute('data-lang');
-					if (elementLang === currentLanguage) {
-						element.style.display = '';
-						element.style.visibility = 'visible';
-						element.style.opacity = '1';
-					} else {
-						element.style.display = 'none';
-						element.style.visibility = 'hidden';
-						element.style.opacity = '0';
-					}
-				});
-			}
-			
-			// Initialize when page is ready
-			if (document.readyState === 'complete') {
-				initLanguage();
-			} else {
-				window.addEventListener('load', initLanguage);
-			}
-			
-			// Fallback initialization
-			setTimeout(initLanguage, 1000);
-		})();
-		</script>
+		<!-- ============ ACTE 3 — EXPÉRIENCES ============ -->
+		<section class="work" id="code" data-chapter="07" data-chapter-label="Expériences" data-i18n-attr="data-chapter-label:hud.work">
+			<header class="work__head">
+				<p class="kicker">(02) <span data-i18n="work.kicker">Le code, pour de vrai</span></p>
+				<h2 class="work__title">
+					<span class="outline" data-i18n="work.t1">Là où</span>
+					<span data-i18n="work.t2">j'ai contribué</span>
+				</h2>
+			</header>
 
-	</body>
+			<div class="cards">
+				<article class="card card--illinks">
+					<div class="card__top">
+						<span class="card__idx">A</span>
+						<span class="card__when" data-i18n="c1.when">2 ans · Toulouse</span>
+					</div>
+					<h3 class="card__company"><a href="https://www.illinks.fr/" target="_blank" rel="noopener" data-cursor="↗">illinks</a></h3>
+					<p class="card__role">Développeur Angular / .NET</p>
+					<p class="card__text" data-i18n="c1.text">Mes débuts dans le monde exigeant de la <b>GED</b>. J'ai connecté notre solution aux logiciels métiers des cabinets comptables et développé des web services C#/.NET qui automatisent les traitements documentaires.</p>
+					<ul class="tags"><li>Angular</li><li>C# .NET</li><li>Web services</li><li data-i18n="c1.tag">GED</li></ul>
+					<div class="card__art card__art--docs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+				</article>
+
+				<article class="card card--liebherr">
+					<div class="hazard" aria-hidden="true"></div>
+					<div class="card__top">
+						<span class="card__idx">B</span>
+						<span class="card__when" data-i18n="c2.when">Depuis juillet 2024</span>
+					</div>
+					<h3 class="card__company">
+						<a href="https://www.viveris.fr/" target="_blank" rel="noopener" data-cursor="↗">Viveris</a>
+						<span class="card__x">×</span>
+						<a href="https://www.liebherr.com/" target="_blank" rel="noopener" data-cursor="↗">Liebherr</a>
+					</h3>
+					<p class="card__role">Développeur React / .NET · Fleet Management System</p>
+					<p class="card__text" data-i18n="c2.text">Un FMS pour piloter des flottes d'engins dans les <b>mines</b>. Équipe internationale, tout en anglais, Scrum au quotidien, main dans la main avec les Product Owners et Product Managers. Avec l'équipe, je travaille sur l'<b>internationalisation</b> et l'<b>industrialisation</b> du produit, ainsi que sur de nouvelles fonctionnalités. Je suis aussi responsable de la <b>Code Quality</b> : <b>SonarQube</b>, linters, formatters et outillage qualité ; je fournis les rapports UTR, ITR et SAST, et je fais le lien entre l'équipe SQ et les équipes de développement.</p>
+					<ul class="tags"><li>React</li><li>.NET</li><li>gRPC</li><li>DDS</li><li>SignalR</li><li>RabbitMQ</li><li>Redis</li><li>Docker</li><li>Code Quality</li><li>SonarQube</li><li>SAST</li></ul>
+					<div class="radar" aria-hidden="true">
+						<svg viewBox="0 0 300 300">
+							<circle cx="150" cy="150" r="140" /><circle cx="150" cy="150" r="100" /><circle cx="150" cy="150" r="60" /><circle cx="150" cy="150" r="20" />
+							<path d="M150 10 V290 M10 150 H290" />
+							<g class="radar__sweep"><path d="M150 150 L150 10 A140 140 0 0 1 271 80 Z" /></g>
+							<circle class="blip" cx="210" cy="95" r="7" /><circle class="blip" cx="95" cy="200" r="7" style="animation-delay:-.8s" />
+							<circle class="blip" cx="190" cy="215" r="7" style="animation-delay:-1.6s" /><circle class="blip" cx="80" cy="110" r="7" style="animation-delay:-2.3s" />
+						</svg>
+						<span class="radar__label">FMS · LIVE</span>
+					</div>
+					<div class="truck" aria-hidden="true">
+						<svg viewBox="0 0 330 200">
+							<path class="truck__bed" d="M6 30 L206 18 L220 26 L220 104 L36 112 Z" />
+							<path class="truck__line" d="M60 28 V108 M100 26 V106 M140 23 V105 M180 21 V104 M12 56 L218 48" />
+							<path class="truck__bed" d="M206 18 L300 28 L300 38 L220 40 Z" />
+							<rect class="truck__body" x="236" y="44" width="48" height="36" />
+							<rect class="truck__win" x="244" y="50" width="32" height="16" />
+							<rect class="truck__body" x="218" y="80" width="100" height="9" />
+							<path class="truck__line" d="M218 72 H316 M232 72 V80 M262 72 V80 M292 72 V80 M316 72 V80" />
+							<path class="truck__line" d="M304 90 L324 146 M308 102 L318 100 M312 114 L322 112 M316 126 L326 124" />
+							<rect class="truck__body" x="282" y="89" width="34" height="48" />
+							<path class="truck__line" d="M286 98 H312 M286 106 H312 M286 114 H312 M286 122 H312" />
+							<rect class="truck__body" x="28" y="106" width="270" height="24" />
+							<rect class="truck__body" x="150" y="128" width="54" height="20" />
+							<g class="truck__wheel"><circle cx="92" cy="154" r="42" /><circle cx="92" cy="154" r="16" class="truck__hub" /></g>
+							<g class="truck__wheel"><circle cx="252" cy="154" r="42" /><circle cx="252" cy="154" r="16" class="truck__hub" /></g>
+						</svg>
+					</div>
+				</article>
+
+				<article class="card card--next">
+					<div class="card__top">
+						<span class="card__idx">C</span>
+						<span class="card__when" data-i18n="c3.when">Un jour, peut-être</span>
+					</div>
+					<h3 class="card__company" data-i18n="c3.title">Votre projet&nbsp;?</h3>
+					<p class="card__role" data-i18n="c3.role">Le prochain chapitre est encore blanc.</p>
+					<p class="card__text" data-i18n="c3.text">Je suis actuellement en mission chez Liebherr, mais je ne suis pas fermé aux nouvelles opportunités. Un projet ambitieux et innovant, où mettre à profit mon expertise Microsoft et mon expérience full-stack ? Parlons-en.</p>
+					<a href="#contact" class="btn btn--ink" data-magnetic data-i18n="c3.cta">Parlons-en →</a>
+					<div class="blank" aria-hidden="true">
+						<span class="blank__head" data-i18n="c3.chapter">Chapitre 06</span>
+						<span class="blank__line"><span class="caret">▌</span></span>
+						<i></i><i></i><i></i><i></i>
+					</div>
+				</article>
+			</div>
+		</section>
+
+		<!-- ============ ACTE 5 — HORS ÉCRAN ============ -->
+		<section class="human" id="humain" data-chapter="08" data-chapter-label="Hors écran" data-i18n-attr="data-chapter-label:hud.human">
+			<header class="human__head">
+				<p class="kicker">(03) <span data-i18n="human.kicker">Hors écran</span></p>
+				<h2 class="human__title"><span data-i18n="human.t1">Quand je ne code pas,</span> <em data-i18n="human.t2">je bouge.</em></h2>
+			</header>
+			<div class="hobbies">
+				<article class="hobby hobby--basket" data-cursor="Swish">
+					<img src="/images/court.webp" alt="" loading="lazy" width="1600" height="900" />
+					<h3>Basket</h3>
+					<p data-i18n="h1.text">Le terrain, le bruit du filet, l'esprit d'équipe.</p>
+				</article>
+				<article class="hobby hobby--tennis" data-cursor="Ace">
+					<div class="ball" aria-hidden="true"></div>
+					<h3>Tennis</h3>
+					<p data-i18n="h2.text">Un sport de précision… et de patience.</p>
+				</article>
+				<article class="hobby hobby--moto" data-cursor="Vroum">
+					<div class="road" aria-hidden="true"></div>
+					<svg class="bike" viewBox="0 0 100 150" aria-hidden="true">
+						<g class="bike__lean">
+							<rect x="44" y="104" width="12" height="42" rx="6" class="bike__tire" />
+							<path d="M38 100 Q50 92 62 100 L60 108 H40 Z" class="bike__body" />
+							<rect x="44" y="100" width="12" height="5" rx="2" class="bike__light" />
+							<path d="M34 92 Q50 84 66 92 L62 100 H38 Z" class="bike__body" />
+							<path d="M18 62 H82" class="bike__bar" />
+							<circle cx="16" cy="58" r="4" class="bike__mirror" /><circle cx="84" cy="58" r="4" class="bike__mirror" />
+							<path d="M34 50 Q50 40 66 50 L70 88 Q50 94 30 88 Z" class="bike__rider" />
+							<path d="M34 54 L20 62 M66 54 L80 62" class="bike__arm" />
+							<circle cx="50" cy="34" r="14" class="bike__helmet" />
+							<path d="M38 32 Q50 26 62 32" class="bike__visor" />
+						</g>
+					</svg>
+					<h3>Moto</h3>
+					<p data-i18n="h3.text">Des kilomètres de routes, casque sur la tête, esprit libre.</p>
+				</article>
+				<article class="hobby hobby--hike" data-cursor="Go">
+					<svg class="peaks" viewBox="0 0 300 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+						<path class="peak peak--back" d="M0 220 L70 90 L120 150 L190 40 L250 120 L300 70 L300 220 Z" />
+						<path class="peak peak--snow" d="M190 40 L170 75 L184 70 L194 82 L206 66 L212 72 Z" />
+						<path class="peak peak--front" d="M0 220 L0 170 L60 120 L110 170 L160 130 L230 190 L300 150 L300 220 Z" />
+						<path class="trail" d="M40 215 C 80 200, 70 175, 110 168 S 150 150, 175 120 S 185 80, 190 48" />
+					</svg>
+					<h3 data-i18n="h4.title">Randonnée</h3>
+					<p data-i18n="h4.text">Un pas après l'autre, et la vue en récompense.</p>
+				</article>
+			</div>
+		</section>
+
+		<!-- ============ ACTE 6 — CONTACT ============ -->
+		<section class="contact" id="contact" data-chapter="09" data-chapter-label="Contact">
+			<div class="contact__grid">
+				<figure class="contact__photo">
+					<img src="/images/horizon.webp" alt="Alexandre de profil, regardant l'horizon" loading="lazy" width="900" height="1200" data-i18n-attr="alt:contact.alt" />
+					<figcaption data-i18n="contact.caption">↑ en train de penser à votre projet</figcaption>
+				</figure>
+
+				<div class="contact__main">
+					<p class="kicker">(04) <span data-i18n="contact.kicker">Le prochain chapitre</span></p>
+					<h2 class="contact__title">
+						<span data-i18n="contact.t1">On construit</span>
+						<em data-i18n="contact.t2">quoi&nbsp;?</em>
+					</h2>
+
+					<form class="form" id="contact-form" novalidate>
+						<div class="field">
+							<label for="name" data-i18n="form.name">Votre nom</label>
+							<input type="text" id="name" name="name" autocomplete="name" required />
+						</div>
+						<div class="field">
+							<label for="email" data-i18n="form.email">Votre email</label>
+							<input type="email" id="email" name="email" autocomplete="email" required />
+						</div>
+						<div class="field field--full">
+							<label for="message" data-i18n="form.message">Votre idée (même un peu folle)</label>
+							<textarea id="message" name="message" rows="3" required></textarea>
+						</div>
+						<!-- Champ piège : invisible pour les humains, les robots le remplissent -->
+						<div class="field--trap" aria-hidden="true">
+							<label for="website">Ne pas remplir</label>
+							<input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+						</div>
+						<div class="form__foot">
+							<button type="submit" class="send" data-magnetic data-cursor="↗">
+								<span class="send__label" data-i18n="form.send">Envoyer</span>
+							</button>
+							<p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+						</div>
+					</form>
+
+					<ul class="links">
+						<li><a href="https://github.com/CardinAlexandre" target="_blank" rel="noopener" data-cursor="↗">GitHub</a></li>
+						<li><a href="https://www.linkedin.com/in/alexandre-cardin/" target="_blank" rel="noopener" data-cursor="↗">LinkedIn</a></li>
+						<li><a href="/CV-Alexandre-Cardin.pdf" target="_blank" rel="noopener" data-cursor="PDF">CV (FR)</a></li>
+						<li><a href="/English-Version-CV-Alexandre-Cardin.pdf" target="_blank" rel="noopener" data-cursor="PDF">CV (EN)</a></li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- ============ FOOTER ============ -->
+	<footer class="footer">
+		<div class="footer__row">
+			<span>© 2026 Alexandre Cardin</span>
+			<span>Toulouse, France</span>
+			<a href="#top" class="footer__top" data-magnetic data-i18n="footer.top">Remonter ↑</a>
+		</div>
+		<div class="footer__giant" aria-hidden="true" data-split-letters>Cardin</div>
+	</footer>
+
+	<script src="/assets/vendor/gsap.min.js?v=3.15.0"></script>
+	<script src="/assets/vendor/ScrollTrigger.min.js?v=3.15.0"></script>
+	<script src="/assets/vendor/lenis.min.js?v=1.3.26"></script>
+	<script src="/assets/js/i18n.js?v=2026.11h"></script>
+	<script src="/assets/js/app.js?v=2026.11g"></script>
+</body>
 </html>

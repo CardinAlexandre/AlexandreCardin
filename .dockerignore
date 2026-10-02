@@ -1,3 +1,9 @@
+# Service mailer (image séparée)
+mailer/
+
+# Secrets locaux
+.env
+
 # Git
 .git
 .gitignore

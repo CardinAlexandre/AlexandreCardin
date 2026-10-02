@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Mailer.Tests/Mailer.Tests.csproj" />
+  <Project Path="Mailer/Mailer.csproj" />
+</Solution>
