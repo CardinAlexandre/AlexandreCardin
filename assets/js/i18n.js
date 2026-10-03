@@ -1,4 +1,4 @@
-/* Traductions anglaises. Le français vit directement dans le HTML (data-i18n="clé"). */
+/* English translations. French lives directly in the HTML (data-i18n="key"). */
 window.I18N_EN = {
 	'loader.1': 'metal',
 	'loader.2': 'wood',
@@ -9,6 +9,7 @@ window.I18N_EN = {
 	'nav.code': 'Code',
 	'nav.human': 'Off screen',
 	'nav.contact': 'Contact',
+	'nav.skip': 'Skip to content',
 
 	'hud.intro': 'Intro',
 	'hud.manifesto': 'Manifesto',
@@ -122,7 +123,7 @@ window.I18N_EN = {
 	'footer.top': 'Back to top ↑'
 };
 
-/* Messages dynamiques côté français (non présents dans le DOM) */
+/* French messages that are not in the DOM (generated at runtime) */
 window.I18N_FR_DYNAMIC = {
 	'game.grab': 'Attrape',
 	'game.drop': 'Lâche',

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Alexandre Cardin — Métal, bois, code
+   Alexandre Cardin — portfolio styles
    ========================================================================== */
 
 :root {
@@ -8,21 +8,19 @@
 	--paper: #f3efe6;
 	--mint: #8fe3c0;
 	--lilac: #b9a7ff;
-	/* Lime et rose : conservés uniquement pour la section Contact */
+	/* Lime and pink: kept for the Contact section only */
 	--acid: #c8ff2e;
 	--pink: #ff3c8e;
 	--blue: #2f3cff;
 	--orange: #ff5a1f;
 	--yellow: #ffd400;
-	--wood: #c8642c;
-	--steel: #8d96a1;
 
 	--f-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
 	--f-serif: "Instrument Serif", Georgia, serif;
 	--f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
 
 	--gutter: clamp(16px, 4vw, 64px);
-	/* Marge des panneaux : sur très grand écran, le contenu reste dans 1680px centrés */
+	/* Panel gutter: on very wide screens, content stays within a centred 1680px band */
 	--edge: max(var(--gutter), calc((100vw - 1680px) / 2));
 	--radius: clamp(18px, 2.4vw, 32px);
 	--ease: cubic-bezier(.7, 0, .2, 1);
@@ -61,12 +59,12 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; }
 	opacity: .75;
 }
 
-/* Lettres découpées par JS */
+/* Letters and words split by JS */
 .ch { display: inline-block; will-change: transform; }
 .w { display: inline-block; }
 
 /* ==========================================================================
-   Loader, rideau, grain, curseur
+   Loader, curtain, film grain, cursor
    ========================================================================== */
 
 .loader { display: none; }
@@ -132,6 +130,17 @@ html.is-switching .curtain { transform: none; transition: transform .6s var(--ea
    Navigation & HUD
    ========================================================================== */
 
+/* Skip link: hidden until focused with the keyboard */
+.skip-link {
+	position: fixed; left: 16px; top: -80px; z-index: 10002;
+	padding: .7em 1.1em; border-radius: 999px;
+	background: var(--paper); color: var(--ink); border: 2px solid var(--ink);
+	font-family: var(--f-mono); font-size: .8rem; font-weight: 700; text-decoration: none;
+	transition: top .2s var(--ease-out);
+}
+.skip-link:focus { top: 16px; }
+main:focus { outline: none; }
+
 .nav {
 	position: fixed; top: 0; left: 0; right: 0; z-index: 500;
 	display: flex; align-items: center; justify-content: space-between; gap: 1rem;
@@ -144,7 +153,6 @@ html.is-switching .curtain { transform: none; transition: transform .6s var(--ea
 .nav__logo span { display: inline-block; transition: transform .5s var(--ease-out); }
 .nav__logo:hover span:first-child { transform: rotate(-14deg) translateY(-3px); }
 .nav__logo:hover span:nth-child(2) { transform: rotate(12deg) translateY(3px); }
-.nav__logo sup { font-size: .5em; margin-left: 2px; }
 .nav__status { display: flex; align-items: center; gap: .7rem; }
 .nav__clock { opacity: .6; }
 .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 var(--mint); animation: pulse 1.8s infinite; }
@@ -183,7 +191,7 @@ html[lang="fr"] .nav__lang .is-fr, html[lang="en"] .nav__lang .is-en { backgroun
 }
 
 /* ==========================================================================
-   Stickers génériques
+   Generic stickers
    ========================================================================== */
 
 .sticker {
@@ -205,11 +213,10 @@ html[lang="fr"] .nav__lang .is-fr, html[lang="en"] .nav__lang .is-en { backgroun
 	font-size: clamp(1rem, 1.5vw, 1.4rem);
 	animation: morph 7s ease-in-out infinite;
 }
-.sticker--tag, .sticker--hazard, .sticker--temp {
+.sticker--tag, .sticker--temp {
 	padding: .6em 1em; border: 2px solid var(--ink); font-family: var(--f-mono); font-size: .8rem;
 	background: var(--paper); box-shadow: 6px 6px 0 var(--ink);
 }
-.sticker--hazard { background: var(--yellow); }
 .sticker--temp { background: #bfe6ff; font-family: var(--f-display); font-size: clamp(1.4rem, 3vw, 2.6rem); border-radius: 999px; padding: .4em .8em; }
 @keyframes spin { to { rotate: 360deg; } }
 @keyframes morph {
@@ -298,7 +305,7 @@ html[lang="fr"] .nav__lang .is-fr, html[lang="en"] .nav__lang .is-en { backgroun
 	.hero__scroll { position: relative; right: auto; bottom: auto; margin-top: 3vh; }
 }
 
-/* Bandes croisées */
+/* Marquee band */
 .bands { position: relative; z-index: 6; height: clamp(150px, 22vh, 240px); margin: -60px 0 -40px; overflow-x: clip; pointer-events: none; }
 .band {
 	position: absolute; left: -5%; right: -5%; top: 50%;
@@ -311,7 +318,7 @@ html[lang="fr"] .nav__lang .is-fr, html[lang="en"] .nav__lang .is-en { backgroun
 .band__track span { white-space: nowrap; }
 
 /* ==========================================================================
-   MANIFESTE
+   MANIFESTO
    ========================================================================== */
 
 .manifesto {
@@ -340,7 +347,7 @@ html[lang="fr"] .nav__lang .is-fr, html[lang="en"] .nav__lang .is-en { backgroun
 }
 .manifesto__sign { position: relative; margin: 2.4rem 0 0; font-family: var(--f-serif); font-style: italic; font-size: clamp(1.3rem, 2vw, 2rem); opacity: .7; }
 
-/* Trois échantillons de matière, posés comme sur un établi */
+/* Three material swatches, laid out like on a workbench */
 .swatches { position: relative; width: 100%; height: min(72vh, 44vw); }
 .swatch {
 	position: absolute; width: min(52%, 46vh); aspect-ratio: 3 / 4;
@@ -385,8 +392,10 @@ html.js .manifesto__text .w { opacity: .13; }
 .chip--code { color: var(--mint); background: var(--ink); font-family: var(--f-mono); font-weight: 700; font-size: .6em; padding: .3em .5em; }
 
 /* ==========================================================================
-   HISTOIRE — panneaux horizontaux
+   STORY — horizontal panels
    ========================================================================== */
+
+/* --- Shared panel base ----------------------------------------------------- */
 
 .story { position: relative; overflow: hidden; }
 .story__track { display: flex; width: max-content; }
@@ -420,6 +429,10 @@ html.js .manifesto__text .w { opacity: .13; }
 }
 .panel__art svg { width: 100%; height: 100%; overflow: visible; }
 
+/* --- 01 Rouen -------------------------------------------------------------- */
+
+.panel--rouen { background: var(--blue); color: var(--paper); }
+
 .art-rouen { display: grid; place-items: center; }
 .art-rouen__ring { position: absolute; inset: 0; animation: spin 22s linear infinite; }
 .art-rouen__ring text { fill: var(--paper); font-family: var(--f-mono); font-weight: 700; font-size: 17px; }
@@ -441,6 +454,28 @@ html.js .manifesto__text .w { opacity: .13; }
 .todo li::before { content: "□ "; font-family: var(--f-mono); font-style: normal; }
 .todo__then { display: block; color: var(--blue); }
 
+/* --- 02 Metal — Piriou shipyard, Brittany ---------------------------------- */
+
+.panel--metal { background: radial-gradient(70vw 70vh at 70% 30%, #2b2e35, #0e0f12 70%); color: #e9edf2; }
+.sparks { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+.panel__title--chrome {
+	background: linear-gradient(175deg, #ffffff 0%, #b9c1cb 38%, #4a5059 49%, #f4f7fa 54%, #8a929c 72%, #e2e6eb 100%);
+	background-size: 100% 200%;
+	-webkit-background-clip: text; background-clip: text; color: transparent;
+	animation: sheen 5s ease-in-out infinite alternate;
+	filter: drop-shadow(0 8px 30px rgba(255, 90, 31, .25));
+}
+@keyframes sheen { to { background-position: 0 100%; } }
+.panel--metal .panel__text b { color: var(--orange); }
+
+.rain {
+	position: absolute; inset: -20% 0 0; z-index: 1; opacity: .35;
+	background-image: repeating-linear-gradient(105deg, transparent 0 22px, rgba(255,255,255,.55) 22px 23px, transparent 23px 61px);
+	background-size: 100% 220px;
+	animation: rain .55s linear infinite;
+}
+@keyframes rain { to { background-position: -60px 220px; } }
+
 .art-ship { width: clamp(320px, 48vw, 860px); aspect-ratio: 3 / 2; right: var(--edge); top: auto; bottom: 7vh; translate: none; }
 .art-ship svg { overflow: visible; filter: drop-shadow(0 24px 40px rgba(0, 0, 0, .55)); }
 .art-ship .yard { fill: #1c1e23; }
@@ -450,7 +485,31 @@ html.js .manifesto__text .w { opacity: .13; }
 .art-ship .plates path { fill: none; stroke: rgba(11, 11, 15, .45); stroke-width: 2; }
 .art-ship .gap rect { fill: #121317; }
 .art-ship .gap path { stroke: #5d646d; stroke-width: 3; }
-/* Mini-jeu de soudure */
+
+.art-ship .deckhouse { fill: #c9cfd6; stroke: var(--ink); stroke-width: 3; }
+.art-ship .windows rect { fill: #121317; }
+.art-ship .scaffold { fill: none; stroke: #e9edf2; stroke-width: 2; opacity: .7; }
+.art-ship .gantry rect { fill: var(--yellow); stroke: var(--ink); stroke-width: 2; }
+.art-ship .trolley { animation: trolley 9s ease-in-out infinite alternate; }
+.art-ship .trolley__cart { fill: var(--yellow); stroke: var(--ink); stroke-width: 2; }
+.art-ship .load { transform-box: view-box; transform-origin: 300px 88px; animation: swing 2.4s ease-in-out infinite alternate; }
+.art-ship .cable { fill: none; stroke: #e9edf2; stroke-width: 2; }
+.art-ship .plate { fill: #6d757f; stroke: var(--ink); stroke-width: 2; }
+.art-ship .pole { stroke: #e9edf2; stroke-width: 3; }
+.art-ship .flag { transform-box: fill-box; transform-origin: 0 50%; animation: flag 1.1s ease-in-out infinite alternate; }
+@keyframes trolley { from { translate: -150px 0; } to { translate: 110px 0; } }
+@keyframes swing { from { rotate: -6deg; } to { rotate: 6deg; } }
+@keyframes flag { from { transform: skewY(-5deg) scaleX(.94); } to { transform: skewY(4deg) scaleX(1); } }
+
+.sticker--bzh {
+	width: clamp(96px, 8vw, 140px); aspect-ratio: 3 / 2; border-radius: 50%;
+	background: #fff; border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+	font-size: clamp(1.4rem, 2.2vw, 2.4rem); letter-spacing: .02em;
+}
+.panel--metal .sticker--bzh { right: calc(var(--edge) + 2vw); top: 12vh; rotate: 8deg; }
+
+/* --- 02 Metal — welding mini-game ------------------------------------------ */
+
 .art-ship svg { user-select: none; -webkit-user-select: none; }
 .art-ship .weld-guide { fill: none; stroke: #ffe9b0; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 7; animation: weld-guide 1s linear infinite; }
 @keyframes weld-guide { to { stroke-dashoffset: -18; } }
@@ -475,123 +534,9 @@ html.js .manifesto__text .w { opacity: .13; }
 }
 .weld-stamp small { display: block; margin-top: .3rem; font-family: var(--f-serif); font-style: italic; font-weight: 400; font-size: .42em; color: #ffd8b0; }
 @media (max-width: 900px) { .scoreboard.scoreboard--steel { top: -14%; } }
-.art-ship .deckhouse { fill: #c9cfd6; stroke: var(--ink); stroke-width: 3; }
-.art-ship .windows rect { fill: #121317; }
-.art-ship .scaffold { fill: none; stroke: #e9edf2; stroke-width: 2; opacity: .7; }
-.art-ship .gantry rect { fill: var(--yellow); stroke: var(--ink); stroke-width: 2; }
-.art-ship .trolley { animation: trolley 9s ease-in-out infinite alternate; }
-.art-ship .trolley__cart { fill: var(--yellow); stroke: var(--ink); stroke-width: 2; }
-.art-ship .load { transform-box: view-box; transform-origin: 300px 88px; animation: swing 2.4s ease-in-out infinite alternate; }
-.art-ship .cable { fill: none; stroke: #e9edf2; stroke-width: 2; }
-.art-ship .plate { fill: #6d757f; stroke: var(--ink); stroke-width: 2; }
-.art-ship .pole { stroke: #e9edf2; stroke-width: 3; }
-.art-ship .flag { transform-box: fill-box; transform-origin: 0 50%; animation: flag 1.1s ease-in-out infinite alternate; }
-@keyframes trolley { from { translate: -150px 0; } to { translate: 110px 0; } }
-@keyframes swing { from { rotate: -6deg; } to { rotate: 6deg; } }
-@keyframes flag { from { transform: skewY(-5deg) scaleX(.94); } to { transform: skewY(4deg) scaleX(1); } }
 
-.sticker--bzh {
-	width: clamp(96px, 8vw, 140px); aspect-ratio: 3 / 2; border-radius: 50%;
-	background: #fff; border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
-	font-size: clamp(1.4rem, 2.2vw, 2.4rem); letter-spacing: .02em;
-}
-.panel--metal .sticker--bzh { right: calc(var(--edge) + 2vw); top: 12vh; rotate: 8deg; }
+/* --- 03 Wood — Montréal ---------------------------------------------------- */
 
-.art-wood .bark { fill: #5a2c12; }
-.art-wood .core { fill: #f0b47e; }
-.art-wood .rings ellipse { fill: none; stroke: #8a4520; stroke-width: 3.5; }
-.art-wood .crack { fill: none; stroke: #5a2c12; stroke-width: 5; stroke-linecap: round; }
-.art-wood svg { rotate: -8deg; filter: drop-shadow(14px 14px 0 var(--ink)); }
-
-/* Lancer de haches sur le rondin : la pointe de la lame est le point d'ancrage */
-@media not all and (pointer: fine) { .art-wood { cursor: pointer; } }
-.axe {
-	position: absolute; z-index: 2; width: 40%; aspect-ratio: 1;
-	transform-origin: 5.7% 50.7%; /* le décalage vers le tranchant est géré par GSAP (xPercent/yPercent) */
-	pointer-events: none; will-change: transform;
-}
-.axe svg { width: 100%; height: 100%; overflow: visible; rotate: 0deg; transform-origin: 5.7% 50.7%; filter: drop-shadow(5px 6px 0 rgba(11, 11, 15, .45)); }
-.axe__handle-out { fill: none; stroke: var(--ink); stroke-width: 12; stroke-linecap: round; }
-.axe__handle { fill: none; stroke: #a8642f; stroke-width: 7; stroke-linecap: round; }
-.axe__grain { fill: none; stroke: #d08a4e; stroke-width: 2; stroke-linecap: round; }
-.axe__knob { fill: #6d757f; stroke: var(--ink); stroke-width: 2.5; }
-.axe__wrap { fill: none; stroke: #3b2314; stroke-width: 4.5; stroke-linecap: round; }
-.axe__rune { fill: none; stroke: #4a5059; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.axe__eye { fill: #4a5059; stroke: var(--ink); stroke-width: 1.5; }
-.axe__head { fill: #8f98a3; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
-.axe__bevel { fill: none; stroke: #d6dce2; stroke-width: 3; stroke-linecap: round; }
-.axe__edge { fill: none; stroke: #f4f7fa; stroke-width: 2.5; stroke-linecap: round; }
-.axe__cut { fill: #3a1d0c; opacity: .55; }
-.woodchip { position: absolute; z-index: 3; width: 9px; height: 5px; background: #d9965f; border: 1px solid #5a2c12; pointer-events: none; }
-
-/* 05 Code : l'homme à tête d'écran cathodique, sans couleur */
-.crt-man {
-	position: absolute; z-index: 1; right: calc(var(--edge) + 6vw); bottom: 0;
-	height: min(88vh, 64vw); width: auto; aspect-ratio: 400 / 640; overflow: visible;
-	filter: drop-shadow(14px 14px 0 rgba(243, 239, 230, .08));
-}
-.crt-man path, .crt-man rect, .crt-man ellipse, .crt-man circle { stroke: #f3efe6; stroke-width: 2.4; stroke-linejoin: round; }
-.crt-man .g-jacket { fill: #3a3a3d; }
-.crt-man .g-lapel { fill: #4d4d51; }
-.crt-man .g-mid { fill: #262628; }
-.crt-man .g-dark { fill: #111113; }
-.crt-man .g-light { fill: #e6e6e6; }
-.crt-man .g-skin { fill: #b9b9b9; }
-.crt-man .g-case { fill: #d6d6d6; }
-.crt-man .g-shade { fill: #a9a9a9; }
-.crt-man .g-shade-dark { fill: #7d7d7d; }
-.crt-man .crt-line { fill: none; stroke: #6d6d6d; stroke-width: 2; }
-.crt-man .crt-cable { fill: none; stroke: #9a9a9a; stroke-width: 5; stroke-linecap: round; }
-.crt-man .crt-plug { fill: #d6d6d6; stroke-width: 2; }
-.crt-man .crt-screen { fill: #141416; stroke: none; }
-.crt-man .crt-screen-rim { fill: none; stroke: #5a5a5e; stroke-width: 4; }
-.crt-man .crt-scanlines { stroke: none; animation: crt-scan 6s linear infinite; }
-@keyframes crt-scan { to { transform: translateY(8px); } }
-.crt-man .crt-text { fill: #eeeeee; stroke: none; font-family: var(--f-mono); font-weight: 700; font-size: 30px; animation: crt-flicker 3.2s steps(1) infinite; }
-.crt-man .crt-cursor { fill: #eeeeee; stroke: none; animation: blink 1s steps(1) infinite; }
-.crt-man .crt-glare { fill: #ffffff; stroke: none; opacity: .14; }
-@keyframes crt-flicker { 0%, 100% { opacity: 1; } 47% { opacity: .82; } 48% { opacity: 1; } 76% { opacity: .9; } 77% { opacity: 1; } }
-.crt-man .crt-head { transform-box: view-box; transform-origin: 200px 210px; }
-/* Easter egg : on branche la fiche, il s'électrocute, puis redémarre */
-.crt-man .crt-plug-hit { fill: transparent; stroke: none; cursor: grab; touch-action: none; }
-@media (hover: hover) and (pointer: fine) { .crt-man .crt-plug-hit { cursor: none; } }
-.crt-man .crt-socket { transform-box: fill-box; }
-.crt-man .crt-bolts path { fill: none; stroke: #f3efe6; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
-.crt-man .crt-off { fill: #f3efe6; stroke: none; transform-box: fill-box; transform-origin: center; }
-.crt-man .crt-boot { fill: #eeeeee; stroke: none; font-family: var(--f-mono); font-weight: 700; font-size: 18px; letter-spacing: 3px; }
-.crt-man .crt-bar-bg { fill: none; stroke: #eeeeee; stroke-width: 1.5; }
-.crt-man .crt-bar { fill: #eeeeee; stroke: none; }
-.crt-man .crt-smoke { fill: #9a9a9a; stroke: none; }
-.crt-man.is-zapped { animation: crt-zap .14s steps(1) infinite; }
-@keyframes crt-zap { 50% { filter: invert(1); } }
-@media (max-width: 900px) {
-	.crt-man { position: relative; right: auto; bottom: auto; order: -1; justify-self: center; height: auto; width: 62vw; margin-bottom: 2vh; }
-}
-
-/* 01 Rouen */
-.panel--rouen { background: var(--blue); color: var(--paper); }
-.rain {
-	position: absolute; inset: -20% 0 0; z-index: 1; opacity: .35;
-	background-image: repeating-linear-gradient(105deg, transparent 0 22px, rgba(255,255,255,.55) 22px 23px, transparent 23px 61px);
-	background-size: 100% 220px;
-	animation: rain .55s linear infinite;
-}
-@keyframes rain { to { background-position: -60px 220px; } }
-
-/* 02 Métal */
-.panel--metal { background: radial-gradient(70vw 70vh at 70% 30%, #2b2e35, #0e0f12 70%); color: #e9edf2; }
-.sparks { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
-.panel__title--chrome {
-	background: linear-gradient(175deg, #ffffff 0%, #b9c1cb 38%, #4a5059 49%, #f4f7fa 54%, #8a929c 72%, #e2e6eb 100%);
-	background-size: 100% 200%;
-	-webkit-background-clip: text; background-clip: text; color: transparent;
-	animation: sheen 5s ease-in-out infinite alternate;
-	filter: drop-shadow(0 8px 30px rgba(255, 90, 31, .25));
-}
-@keyframes sheen { to { background-position: 0 100%; } }
-.panel--metal .panel__text b { color: var(--orange); }
-
-/* 03 Bois */
 .panel--wood { background: #e07a3c; color: var(--ink); }
 .wood-grain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; mix-blend-mode: multiply; opacity: .55; }
 .snow {
@@ -641,44 +586,11 @@ html.js .manifesto__text .w { opacity: .13; }
 }
 @keyframes maple-sway { from { translate: -40px 0; } to { translate: 40px 0; } }
 
-/* Feuilles devant le rondin : un peu plus lentes, pour qu'on puisse les viser */
-.maples--log { inset: -30% -6%; z-index: 3; overflow: visible; }
-.maples--log .maple { width: clamp(40px, 3.8vw, 80px); height: clamp(40px, 3.8vw, 80px); }
-.maples--log .maple:nth-child(1) { left: 12%; animation-duration: 7s, 2.6s; animation-delay: -1s, 0s; scale: 1; }
-.maples--log .maple:nth-child(2) { left: 38%; animation-duration: 8.5s, 3.1s; animation-delay: -4.5s, -1s; scale: .85; }
-.maples--log .maple:nth-child(3) { left: 62%; animation-duration: 6.5s, 2.4s; animation-delay: -2.8s, -.4s; scale: 1; }
-.maples--log .maple:nth-child(4) { left: 84%; animation-duration: 9s, 3.4s; animation-delay: -6.2s, -1.6s; scale: .75; }
-
-/* Feuille clouée sous la lame */
-.axe .maple--pinned {
-	position: absolute; left: 5.7%; top: 50.7%; width: 34%; height: 34%;
-	translate: -50% -50%; animation: none; z-index: 0;
-	fill: #e8231a; stroke: var(--ink); stroke-width: 160; stroke-linejoin: round; paint-order: stroke;
-	filter: drop-shadow(3px 4px 0 rgba(11, 11, 15, .5));
-}
-
-/* Tableau de score, façon plaque de bois */
-.scoreboard {
-	position: absolute; left: -8%; bottom: -16%; z-index: 4;
-	display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; max-width: 116%;
-	padding: .55rem 1rem; rotate: -3deg;
-	background: repeating-linear-gradient(100deg, #f0d2a8 0 10px, #e9c495 10px 16px);
-	border: 2px solid var(--ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--ink);
-	color: var(--ink); pointer-events: none;
-}
-.scoreboard__item { display: flex; align-items: baseline; gap: .45rem; }
-.scoreboard__item small { font-family: var(--f-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; }
-.scoreboard__item b { font-size: clamp(1.4rem, 2vw, 2.2rem); font-weight: 800; font-stretch: 80%; line-height: 1; display: inline-block; }
-.scoreboard__combo { color: #b23a2a; }
-.scoreboard__hint { font-family: var(--f-serif); font-style: italic; font-size: clamp(.95rem, 1.1vw, 1.15rem); opacity: .8; }
-
-/* « +3 » qui s'envole à l'impact */
-.score-pop {
-	position: absolute; z-index: 5; translate: -50% -50%; white-space: nowrap; pointer-events: none;
-	font-weight: 800; font-stretch: 80%; font-size: clamp(1.6rem, 2.6vw, 2.8rem); line-height: 1;
-	color: var(--paper); text-shadow: 3px 3px 0 var(--ink), -1px -1px 0 var(--ink), 1px -1px 0 var(--ink), -1px 1px 0 var(--ink);
-}
-.score-pop small { display: block; font-size: .45em; color: #ffd8b0; letter-spacing: .04em; }
+.art-wood .bark { fill: #5a2c12; }
+.art-wood .core { fill: #f0b47e; }
+.art-wood .rings ellipse { fill: none; stroke: #8a4520; stroke-width: 3.5; }
+.art-wood .crack { fill: none; stroke: #5a2c12; stroke-width: 5; stroke-linecap: round; }
+.art-wood svg { rotate: -8deg; filter: drop-shadow(14px 14px 0 var(--ink)); }
 
 .snowbank { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 16vh; z-index: 1; fill: #f7fbff; filter: drop-shadow(0 -6px 0 rgba(11, 11, 15, .12)); }
 .caribou {
@@ -696,7 +608,69 @@ html.js .manifesto__text .w { opacity: .13; }
 .panel--wood .panel__num { opacity: .5; }
 .panel--wood .panel__title { color: var(--paper); text-shadow: 6px 6px 0 var(--ink); }
 
-/* 04 Toulouse, heure dorée */
+/* --- 03 Wood — axe throwing mini-game -------------------------------------- */
+
+@media not all and (pointer: fine) { .art-wood { cursor: pointer; } }
+.axe {
+	position: absolute; z-index: 2; width: 40%; aspect-ratio: 1;
+	transform-origin: 5.7% 50.7%; /* the offset towards the blade edge is handled by GSAP (xPercent/yPercent) */
+	pointer-events: none; will-change: transform;
+}
+.axe svg { width: 100%; height: 100%; overflow: visible; rotate: 0deg; transform-origin: 5.7% 50.7%; filter: drop-shadow(5px 6px 0 rgba(11, 11, 15, .45)); }
+.axe__handle-out { fill: none; stroke: var(--ink); stroke-width: 12; stroke-linecap: round; }
+.axe__handle { fill: none; stroke: #a8642f; stroke-width: 7; stroke-linecap: round; }
+.axe__grain { fill: none; stroke: #d08a4e; stroke-width: 2; stroke-linecap: round; }
+.axe__knob { fill: #6d757f; stroke: var(--ink); stroke-width: 2.5; }
+.axe__wrap { fill: none; stroke: #3b2314; stroke-width: 4.5; stroke-linecap: round; }
+.axe__rune { fill: none; stroke: #4a5059; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.axe__eye { fill: #4a5059; stroke: var(--ink); stroke-width: 1.5; }
+.axe__head { fill: #8f98a3; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+.axe__bevel { fill: none; stroke: #d6dce2; stroke-width: 3; stroke-linecap: round; }
+.axe__edge { fill: none; stroke: #f4f7fa; stroke-width: 2.5; stroke-linecap: round; }
+.axe__cut { fill: #3a1d0c; opacity: .55; }
+.woodchip { position: absolute; z-index: 3; width: 9px; height: 5px; background: #d9965f; border: 1px solid #5a2c12; pointer-events: none; }
+
+/* Leaves in front of the log: slightly slower, so they can be aimed at */
+.maples--log { inset: -30% -6%; z-index: 3; overflow: visible; }
+.maples--log .maple { width: clamp(40px, 3.8vw, 80px); height: clamp(40px, 3.8vw, 80px); }
+.maples--log .maple:nth-child(1) { left: 12%; animation-duration: 7s, 2.6s; animation-delay: -1s, 0s; scale: 1; }
+.maples--log .maple:nth-child(2) { left: 38%; animation-duration: 8.5s, 3.1s; animation-delay: -4.5s, -1s; scale: .85; }
+.maples--log .maple:nth-child(3) { left: 62%; animation-duration: 6.5s, 2.4s; animation-delay: -2.8s, -.4s; scale: 1; }
+.maples--log .maple:nth-child(4) { left: 84%; animation-duration: 9s, 3.4s; animation-delay: -6.2s, -1.6s; scale: .75; }
+
+/* Leaf pinned under the blade */
+.axe .maple--pinned {
+	position: absolute; left: 5.7%; top: 50.7%; width: 34%; height: 34%;
+	translate: -50% -50%; animation: none; z-index: 0;
+	fill: #e8231a; stroke: var(--ink); stroke-width: 160; stroke-linejoin: round; paint-order: stroke;
+	filter: drop-shadow(3px 4px 0 rgba(11, 11, 15, .5));
+}
+
+/* Scoreboard, wooden plaque style */
+.scoreboard {
+	position: absolute; left: -8%; bottom: -16%; z-index: 4;
+	display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; max-width: 116%;
+	padding: .55rem 1rem; rotate: -3deg;
+	background: repeating-linear-gradient(100deg, #f0d2a8 0 10px, #e9c495 10px 16px);
+	border: 2px solid var(--ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--ink);
+	color: var(--ink); pointer-events: none;
+}
+.scoreboard__item { display: flex; align-items: baseline; gap: .45rem; }
+.scoreboard__item small { font-family: var(--f-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; }
+.scoreboard__item b { font-size: clamp(1.4rem, 2vw, 2.2rem); font-weight: 800; font-stretch: 80%; line-height: 1; display: inline-block; }
+.scoreboard__combo { color: #b23a2a; }
+.scoreboard__hint { font-family: var(--f-serif); font-style: italic; font-size: clamp(.95rem, 1.1vw, 1.15rem); opacity: .8; }
+
+/* "+3" popping up on impact */
+.score-pop {
+	position: absolute; z-index: 5; translate: -50% -50%; white-space: nowrap; pointer-events: none;
+	font-weight: 800; font-stretch: 80%; font-size: clamp(1.6rem, 2.6vw, 2.8rem); line-height: 1;
+	color: var(--paper); text-shadow: 3px 3px 0 var(--ink), -1px -1px 0 var(--ink), 1px -1px 0 var(--ink), -1px 1px 0 var(--ink);
+}
+.score-pop small { display: block; font-size: .45em; color: #ffd8b0; letter-spacing: .04em; }
+
+/* --- 04 Toulouse at golden hour -------------------------------------------- */
+
 .panel--sun { background: linear-gradient(180deg, #ef8d6c 0%, #f6a874 40%, #ffcd8e 72%, #ffe3a8 100%); color: #2a140c; }
 .panel--sun::before { content: ""; position: absolute; inset: 0; background: radial-gradient(48vw 42vh at 47% 76%, rgba(255, 240, 190, .65), transparent 70%); pointer-events: none; }
 .skyline {
@@ -726,7 +700,8 @@ html.js .manifesto__text .w { opacity: .13; }
 .panel--sun .panel__num { color: #4a2418; opacity: .6; }
 .panel--sun .panel__sticker { right: auto; left: calc(var(--edge) + 32vw); top: 16vh; rotate: -5deg; }
 
-/* Mini-jeu : la brique attrape les rayons de soleil */
+/* --- 04 Toulouse — brick and sunbeams mini-game ---------------------------- */
+
 .panel--sun { touch-action: pan-y; }
 .sunrays { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .brick-catcher {
@@ -758,7 +733,8 @@ html.js .manifesto__text .w { opacity: .13; }
 	.scoreboard.scoreboard--brick { right: var(--gutter); bottom: auto; top: 10vh; max-width: 70vw; }
 }
 
-/* 05 Code */
+/* --- 05 Code --------------------------------------------------------------- */
+
 .panel--code { background: var(--ink); color: var(--paper); }
 .panel--code .panel__num { color: var(--mint); opacity: .25; }
 .panel__title--glitch { position: relative; color: var(--mint); }
@@ -780,9 +756,56 @@ html.js .manifesto__text .w { opacity: .13; }
 	box-shadow: 10px 10px 0 var(--mint);
 	overflow-x: auto;
 }
-.t-c { color: #7c8190; } .t-k { color: var(--lilac); } .t-f { color: var(--mint); } .t-s { color: var(--yellow); }
+.t-c { color: #7c8190; } .t-k { color: var(--lilac); } .t-f { color: var(--mint); }
 .caret { color: var(--mint); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
+
+/* --- 05 Code — the CRT-head man and his easter egg ------------------------- */
+
+.crt-man {
+	position: absolute; z-index: 1; right: calc(var(--edge) + 6vw); bottom: 0;
+	height: min(88vh, 64vw); width: auto; aspect-ratio: 400 / 640; overflow: visible;
+	filter: drop-shadow(14px 14px 0 rgba(243, 239, 230, .08));
+}
+.crt-man path, .crt-man rect, .crt-man ellipse, .crt-man circle { stroke: #f3efe6; stroke-width: 2.4; stroke-linejoin: round; }
+.crt-man .g-jacket { fill: #3a3a3d; }
+.crt-man .g-lapel { fill: #4d4d51; }
+.crt-man .g-mid { fill: #262628; }
+.crt-man .g-dark { fill: #111113; }
+.crt-man .g-light { fill: #e6e6e6; }
+.crt-man .g-skin { fill: #b9b9b9; }
+.crt-man .g-case { fill: #d6d6d6; }
+.crt-man .g-shade { fill: #a9a9a9; }
+.crt-man .g-shade-dark { fill: #7d7d7d; }
+.crt-man .crt-line { fill: none; stroke: #6d6d6d; stroke-width: 2; }
+.crt-man .crt-cable { fill: none; stroke: #9a9a9a; stroke-width: 5; stroke-linecap: round; }
+.crt-man .crt-plug { fill: #d6d6d6; stroke-width: 2; }
+.crt-man .crt-screen { fill: #141416; stroke: none; }
+.crt-man .crt-screen-rim { fill: none; stroke: #5a5a5e; stroke-width: 4; }
+.crt-man .crt-scanlines { stroke: none; animation: crt-scan 6s linear infinite; }
+@keyframes crt-scan { to { transform: translateY(8px); } }
+.crt-man .crt-text { fill: #eeeeee; stroke: none; font-family: var(--f-mono); font-weight: 700; font-size: 30px; animation: crt-flicker 3.2s steps(1) infinite; }
+.crt-man .crt-cursor { fill: #eeeeee; stroke: none; animation: blink 1s steps(1) infinite; }
+.crt-man .crt-glare { fill: #ffffff; stroke: none; opacity: .14; }
+@keyframes crt-flicker { 0%, 100% { opacity: 1; } 47% { opacity: .82; } 48% { opacity: 1; } 76% { opacity: .9; } 77% { opacity: 1; } }
+.crt-man .crt-head { transform-box: view-box; transform-origin: 200px 210px; }
+/* Easter egg: plug it in, he gets electrocuted, then reboots */
+.crt-man .crt-plug-hit { fill: transparent; stroke: none; cursor: grab; touch-action: none; }
+@media (hover: hover) and (pointer: fine) { .crt-man .crt-plug-hit { cursor: none; } }
+.crt-man .crt-socket { transform-box: fill-box; }
+.crt-man .crt-bolts path { fill: none; stroke: #f3efe6; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.crt-man .crt-off { fill: #f3efe6; stroke: none; transform-box: fill-box; transform-origin: center; }
+.crt-man .crt-boot { fill: #eeeeee; stroke: none; font-family: var(--f-mono); font-weight: 700; font-size: 18px; letter-spacing: 3px; }
+.crt-man .crt-bar-bg { fill: none; stroke: #eeeeee; stroke-width: 1.5; }
+.crt-man .crt-bar { fill: #eeeeee; stroke: none; }
+.crt-man .crt-smoke { fill: #9a9a9a; stroke: none; }
+.crt-man.is-zapped { animation: crt-zap .14s steps(1) infinite; }
+@keyframes crt-zap { 50% { filter: invert(1); } }
+@media (max-width: 900px) {
+	.crt-man { position: relative; right: auto; bottom: auto; order: -1; justify-self: center; height: auto; width: 62vw; margin-bottom: 2vh; }
+}
+
+/* --- Responsive panels ----------------------------------------------------- */
 
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
 	.story__track { flex-direction: column; width: 100%; }
@@ -792,7 +815,7 @@ html.js .manifesto__text .w { opacity: .13; }
 	.panel { align-content: end; gap: 5vh; }
 	.panel__art { position: relative; right: auto; top: auto; translate: none; justify-self: end; width: 58vw; order: -1; }
 	.panel__num { font-size: 38vw; top: 12vh; }
-	/* Le caribou garde sa place sur la congère, sous le texte */
+	/* The caribou keeps its spot on the snowbank, below the text */
 	.panel--wood { padding-bottom: calc(9vh + 36vw); }
 	.caribou { left: auto; right: 8vw; bottom: 8vh; width: 36vw; }
 	.art-ship { width: 100%; justify-self: stretch; aspect-ratio: 3 / 2; }
@@ -809,7 +832,7 @@ html.js .manifesto__text .w { opacity: .13; }
 }
 
 /* ==========================================================================
-   EXPÉRIENCES — cartes empilées
+   WORK — stacking cards
    ========================================================================== */
 
 .work { position: relative; background: var(--ink); padding: clamp(110px, 18vh, 200px) var(--gutter) 10vh; }
@@ -921,7 +944,7 @@ html.js .manifesto__text .w { opacity: .13; }
 .btn--ink:hover { box-shadow: 0 0 0 var(--paper); }
 
 /* ==========================================================================
-   HORS ÉCRAN
+   OFF SCREEN
    ========================================================================== */
 
 .human { background: var(--mint); color: var(--ink); padding: clamp(110px, 16vh, 180px) var(--gutter) clamp(110px, 18vh, 200px); overflow: hidden; }
@@ -1091,7 +1114,7 @@ html.js .manifesto__text .w { opacity: .13; }
 }
 
 /* ==========================================================================
-   Mouvement réduit
+   Reduced motion
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
