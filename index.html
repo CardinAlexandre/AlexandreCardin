@@ -3,22 +3,67 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Alexandre Cardin — Métal, bois, code</title>
+	<title>Alexandre Cardin — Développeur C#/.NET full-stack · Toulouse</title>
 	<meta name="description" content="Alexandre Cardin, développeur C#/.NET full-stack à Toulouse. Ancien chaudronnier et ébéniste, il façonne aujourd'hui du logiciel." />
 	<meta name="theme-color" content="#0b0b0f" />
-	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Alexandre Cardin — Métal, bois, code" />
+	<link rel="canonical" href="https://welcome.cardinalexandre.fr/" />
+	<meta property="og:type" content="profile" />
+	<meta property="og:site_name" content="Alexandre Cardin" />
+	<meta property="og:url" content="https://welcome.cardinalexandre.fr/" />
+	<meta property="og:locale" content="fr_FR" />
+	<meta property="og:locale:alternate" content="en_GB" />
+	<meta property="og:title" content="Alexandre Cardin — Développeur C#/.NET full-stack · Toulouse" />
 	<meta property="og:description" content="D'abord le métal, puis le bois. Aujourd'hui, le code. Développeur C#/.NET full-stack à Toulouse." />
-	<meta property="og:image" content="/images/og.jpg" />
+	<meta property="og:image" content="https://welcome.cardinalexandre.fr/images/og.jpg" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:alt" content="Portrait d'Alexandre Cardin" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		"name": "Alexandre Cardin",
+		"jobTitle": "Développeur C#/.NET full-stack",
+		"url": "https://welcome.cardinalexandre.fr/",
+		"image": "https://welcome.cardinalexandre.fr/images/og.jpg",
+		"address": {
+			"@type": "PostalAddress",
+			"addressLocality": "Toulouse",
+			"addressCountry": "FR"
+		},
+		"worksFor": {
+			"@type": "Organization",
+			"name": "Viveris"
+		},
+		"knowsAbout": [
+			"C#",
+			".NET",
+			"React",
+			"Angular",
+			"TypeScript",
+			"gRPC",
+			"SignalR",
+			"RabbitMQ",
+			"Redis",
+			"Docker",
+			"SonarQube"
+		],
+		"sameAs": [
+			"https://github.com/CardinAlexandre",
+			"https://www.linkedin.com/in/alexandre-cardin/"
+		]
+	}
+	</script>
 	<link rel="icon" type="image/x-icon" href="/images/Alex.ico" />
 
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" />
-	<link rel="stylesheet" href="/assets/css/style.css?v=2026.11e" />
+	<link rel="stylesheet" href="/assets/css/style.css?v=2026.11k" />
 
 	<script>
-		/* Langue + état JS posés avant le premier rendu pour éviter tout flash */
+		/* Set the language and the JS state before the first paint, to avoid any flash */
 		(function () {
 			var d = document.documentElement, lang = 'fr';
 			try { lang = localStorage.getItem('portfolio-lang') || (navigator.language || '').slice(0, 2); } catch (e) {}
@@ -29,6 +74,8 @@
 	</script>
 </head>
 <body>
+
+	<a class="skip-link" href="#main" data-i18n="nav.skip">Aller au contenu</a>
 
 	<!-- ============ LOADER ============ -->
 	<div class="loader" id="loader" aria-hidden="true">
@@ -42,22 +89,22 @@
 		<div class="loader__bar"><i id="loader-bar"></i></div>
 	</div>
 
-	<!-- Rideau utilisé pour le changement de langue -->
+	<!-- Curtain used when switching language -->
 	<div class="curtain" id="curtain" aria-hidden="true"><span>FR ⇄ EN</span></div>
 
-	<!-- Grain + curseur -->
+	<!-- Film grain + custom cursor -->
 	<div class="grain" aria-hidden="true"></div>
 	<div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label"></span></div></div>
 
 	<!-- ============ NAV ============ -->
 	<header class="nav">
 		<a href="#top" class="nav__logo" aria-label="Retour en haut">
-			<span>A</span><span>C</span><sup>®</sup>
+			<span>A</span><span>C</span>
 		</a>
 		<div class="nav__status">
 			<i class="pulse"></i>
 			<span data-i18n="nav.status">En mission · ouvert aux opportunités</span>
-			<span class="nav__clock">TLS <time id="clock">--:--</time></span>
+			<span class="nav__clock">Toulouse <time id="clock">--:--</time></span>
 		</div>
 		<nav class="nav__links" aria-label="Navigation principale">
 			<a href="#histoire" data-i18n="nav.story">Histoire</a>
@@ -73,16 +120,16 @@
 		</div>
 	</header>
 
-	<!-- HUD chapitre -->
+	<!-- Chapter HUD -->
 	<div class="hud" aria-hidden="true">
 		<span class="hud__num" id="hud-num">00</span>
 		<span class="hud__label" id="hud-label">Intro</span>
 		<span class="hud__track"><i id="hud-progress"></i></span>
 	</div>
 
-	<main id="top">
+	<main id="main" tabindex="-1">
 
-		<!-- ============ ACTE 0 — HERO ============ -->
+		<!-- ============ ACT 0 — HERO ============ -->
 		<section class="hero" data-chapter="00" data-chapter-label="Intro" data-i18n-attr="data-chapter-label:hud.intro">
 			<div class="hero__meta">
 				<span data-i18n="hero.meta">Toulouse, FR · 43.60°N 1.44°E</span>
@@ -103,7 +150,7 @@
 				</svg>
 			</figure>
 
-			<!-- Stickers flottants -->
+			<!-- Floating stickers -->
 			<div class="sticker sticker--pill" data-float="22"><span>C# / .NET</span></div>
 			<div class="sticker sticker--blob" data-float="-14"><span data-i18n="hero.st3">ancien<br/>artisan</span></div>
 
@@ -118,14 +165,14 @@
 			</a>
 		</section>
 
-		<!-- Bandes marquee croisées -->
+		<!-- Marquee band -->
 		<div class="bands" aria-hidden="true">
 			<div class="band band--main"><div class="band__track" data-marquee="1">
 				<span>C# ✺ .NET ✺ React ✺ Angular ✺ gRPC ✺ SignalR ✺ Docker ✺ RabbitMQ ✺ Redis ✺ DDS ✺&nbsp;</span>
 			</div></div>
 		</div>
 
-		<!-- ============ ACTE 1 — MANIFESTE ============ -->
+		<!-- ============ ACT 1 — MANIFESTO ============ -->
 		<section class="manifesto" id="manifeste" data-chapter="01" data-chapter-label="Manifeste" data-i18n-attr="data-chapter-label:hud.manifesto">
 			<div class="manifesto__grid">
 				<div class="manifesto__copy">
@@ -157,7 +204,7 @@
 			</div>
 		</section>
 
-		<!-- ============ ACTE 2 — HISTOIRE (scroll horizontal) ============ -->
+		<!-- ============ ACT 2 — STORY (horizontal scroll) ============ -->
 		<section class="story" id="histoire">
 			<div class="story__track">
 
@@ -188,7 +235,7 @@
 					</div>
 				</article>
 
-				<!-- 02 — Métal -->
+				<!-- 02 — Metal -->
 				<article class="panel panel--metal" data-chapter="03" data-chapter-label="Métal" data-i18n-attr="data-chapter-label:hud.metal">
 					<canvas class="sparks" aria-hidden="true"></canvas>
 					<div class="panel__num">02</div>
@@ -211,14 +258,14 @@
 								</clipPath>
 							</defs>
 
-							<!-- Sol du chantier et tins -->
+							<!-- Shipyard ground and keel blocks -->
 							<rect x="0" y="362" width="600" height="38" class="yard" />
 							<g class="blocks">
 								<rect x="150" y="326" width="28" height="36" /><rect x="236" y="326" width="28" height="36" />
 								<rect x="322" y="326" width="28" height="36" /><rect x="408" y="326" width="28" height="36" />
 							</g>
 
-							<!-- Coque en construction -->
+							<!-- Hull under construction -->
 							<path class="hull" d="M70 190 L520 182 L578 160 L548 262 C528 300 488 322 448 326 L150 326 C112 322 82 300 74 268 Z" />
 							<g clip-path="url(#hull-clip)">
 								<rect x="0" y="270" width="600" height="80" class="primer" />
@@ -226,7 +273,7 @@
 									<path d="M118 150 V340 M166 150 V340 M214 150 V340 M262 150 V340 M310 150 V340 M358 150 V340 M406 150 V340 M454 150 V340 M502 150 V340" />
 									<path d="M40 228 H600 M40 270 H600" />
 								</g>
-								<!-- Tôles pas encore posées : on voit les membrures -->
+								<!-- Plates not fitted yet: the frames show through -->
 								<g class="gap">
 									<rect x="262" y="186" width="48" height="42" /><path d="M274 186 V228 M286 186 V228 M298 186 V228" />
 									<rect x="406" y="228" width="48" height="42" /><path d="M418 228 V270 M430 228 V270 M442 228 V270" />
@@ -234,18 +281,18 @@
 								<g class="weld-beads"></g>
 							</g>
 
-							<!-- Mini-jeu : le joint à souder -->
+							<!-- Mini-game: the seam to weld -->
 							<path class="weld-guide" d="M118 228 H470" />
 							<path class="weld-zone" d="M118 228 H470" />
 							<circle class="weld-end" cx="470" cy="228" r="7" />
 							<circle class="weld-start" cx="118" cy="228" r="9" />
 
-							<!-- Superstructure + échafaudage -->
+							<!-- Superstructure + scaffolding -->
 							<rect class="deckhouse" x="390" y="128" width="96" height="58" />
 							<g class="windows"><rect x="402" y="142" width="16" height="12" /><rect x="430" y="142" width="16" height="12" /><rect x="458" y="142" width="16" height="12" /></g>
 							<path class="scaffold" d="M372 186 V110 M500 184 V110 M372 110 H500 M372 148 H500 M372 110 L500 148 M372 148 L500 110" />
 
-							<!-- Portique -->
+							<!-- Gantry crane -->
 							<g class="gantry">
 								<rect x="34" y="70" width="16" height="292" /><rect x="550" y="70" width="16" height="292" />
 								<rect x="20" y="52" width="560" height="22" />
@@ -260,7 +307,7 @@
 								</g>
 							</g>
 
-							<!-- Gwenn-ha-Du -->
+							<!-- Gwenn-ha-Du (Breton flag) -->
 							<line x1="470" y1="52" x2="470" y2="-44" class="pole" />
 							<g transform="translate(471 -42) scale(1.7)">
 								<g class="flag">
@@ -283,7 +330,7 @@
 					</div>
 				</article>
 
-				<!-- 03 — Bois -->
+				<!-- 03 — Wood -->
 				<article class="panel panel--wood" data-chapter="04" data-chapter-label="Bois" data-i18n-attr="data-chapter-label:hud.wood">
 					<svg class="wood-grain" aria-hidden="true">
 						<filter id="grain-wood"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.12" numOctaves="3" seed="7" /><feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.27  0 0 0 0 0.1  0 0 0 0.9 0" /></filter>
@@ -292,7 +339,7 @@
 					<div class="snow" aria-hidden="true"></div>
 					<div class="snow snow--near" aria-hidden="true"></div>
 
-					<!-- Feuilles d'érable qui tombent -->
+					<!-- Falling maple leaves -->
 					<svg width="0" height="0" class="defs" aria-hidden="true">
 						<symbol id="maple-leaf" viewBox="-2015 -2000 4030 4030">
 							<path d="m-90 2030 45-863a95 95 0 0 0-111-98l-859 151 116-320a65 65 0 0 0-20-73l-941-762 212-99a65 65 0 0 0 34-79l-186-572 542 115a65 65 0 0 0 73-38l105-247 423 454a65 65 0 0 0 111-57l-204-1052 327 189a65 65 0 0 0 91-27l332-652 332 652a65 65 0 0 0 91 27l327-189-204 1052a65 65 0 0 0 111 57l423-454 105 247a65 65 0 0 0 73 38l542-115-186 572a65 65 0 0 0 34 79l212 99-941 762a65 65 0 0 0-20 73l116 320-859-151a95 95 0 0 0-111 98l45 863z" />
@@ -307,7 +354,7 @@
 						<svg class="maple"><use href="#maple-leaf" /></svg>
 					</div>
 
-					<!-- Congère + caribou -->
+					<!-- Snowbank + caribou -->
 					<svg class="snowbank" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
 						<path d="M0 60 C 120 20, 220 70, 340 45 S 560 10, 680 50 S 880 30, 1000 55 L1000 120 L0 120 Z" />
 					</svg>
@@ -344,7 +391,7 @@
 							</g>
 							<path d="M150 150 L232 96 L250 92" class="crack" />
 						</svg>
-						<!-- Feuilles qui tombent devant le rondin : les cibles du lancer de haches -->
+						<!-- Leaves falling in front of the log: the axe-throwing targets -->
 						<div class="maples maples--log">
 							<svg class="maple"><use href="#maple-leaf" /></svg>
 							<svg class="maple"><use href="#maple-leaf" /></svg>
@@ -359,15 +406,15 @@
 					</div>
 				</article>
 
-				<!-- 04 — Soleil -->
+				<!-- 04 — Toulouse -->
 				<article class="panel panel--sun" data-chapter="05" data-chapter-label="Toulouse">
-					<!-- Croquis de Toulouse à l'heure dorée -->
+					<!-- Sketch of Toulouse at golden hour -->
 					<svg class="skyline" viewBox="0 0 1000 420" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
 						<defs>
 							<pattern id="tl-bricks" width="24" height="10" patternUnits="userSpaceOnUse">
 								<rect width="24" height="10" fill="#d9775b" /><path d="M0 5 H24 M12 0 V5 M0 5 V10 M24 5 V10" stroke="#b5563f" stroke-width="1" />
 							</pattern>
-							<!-- Léger tremblé pour l'effet croquis à main levée -->
+							<!-- Slight wobble for a hand-drawn look -->
 							<filter id="tl-sketch" x="-5%" y="-5%" width="110%" height="110%">
 								<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n" />
 								<feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" />
@@ -409,7 +456,7 @@
 							<rect x="680" y="252" width="220" height="58" fill="url(#tl-hatch)" opacity=".15" />
 						</g>
 
-						<!-- Quais + Pont-Neuf -->
+						<!-- Quays + Pont-Neuf -->
 						<g class="sk">
 							<rect x="0" y="300" width="210" height="38" class="bricks" />
 							<rect x="670" y="310" width="330" height="28" class="bricks" />
@@ -426,7 +473,7 @@
 						<path class="ripples" d="M380 352 H560 M410 366 H530 M430 380 H510 M60 360 H180 M720 362 H880 M120 392 H260 M640 396 H820" />
 					</svg>
 
-					<!-- Croix occitane… en brique -->
+					<!-- Occitan cross… made of bricks -->
 					<svg class="sun" viewBox="0 0 400 400" aria-hidden="true">
 						<defs>
 							<pattern id="cross-bricks" width="20" height="9" patternUnits="userSpaceOnUse">
@@ -459,7 +506,7 @@
 						<h2 class="panel__title"><span data-i18n="p4.t1">Cap au</span> <em data-i18n="p4.t2">soleil</em></h2>
 						<p class="panel__text" data-i18n="p4.text">Retour en France. Direction Toulouse, pour le soleil après le froid canadien… et surtout pour l'école où je voulais apprendre le <b>développement</b>. Une suite naturelle, finalement.</p>
 					</div>
-					<!-- Mini-jeu : attraper les rayons de soleil avec une brique -->
+					<!-- Mini-game: catch the sunbeams with a brick -->
 					<canvas class="sunrays" aria-hidden="true"></canvas>
 					<div class="brick-catcher" aria-hidden="true" data-cursor="Attrape" data-i18n-attr="data-cursor:game.grab"></div>
 					<div class="scoreboard scoreboard--brick" aria-hidden="true">
@@ -471,7 +518,7 @@
 
 				<!-- 05 — Code -->
 				<article class="panel panel--code" data-chapter="06" data-chapter-label="Code">
-					<!-- L'homme à tête d'écran cathodique, en noir et blanc -->
+					<!-- The CRT-head man, in black and white -->
 					<svg class="crt-man" viewBox="0 0 400 640" aria-hidden="true">
 						<defs>
 							<pattern id="crt-scan" width="4" height="4" patternUnits="userSpaceOnUse">
@@ -480,9 +527,9 @@
 							<clipPath id="crt-screen-clip"><rect x="128" y="58" width="144" height="104" rx="18" /></clipPath>
 						</defs>
 
-						<!-- Câble d'alimentation qui pend jusqu'au sol -->
+						<!-- Power cable hanging down to the floor -->
 						<path class="crt-cable" d="M318 150 C352 170 344 230 360 290 C376 350 330 380 352 450 C368 500 380 560 366 612" />
-						<!-- Easter egg : la prise murale apparaît quand on attrape la fiche -->
+						<!-- Easter egg: the wall socket appears when the plug is grabbed -->
 						<g class="crt-socket" transform="translate(52 520)" opacity="0">
 							<rect class="g-case" x="-20" y="-28" width="40" height="56" rx="6" />
 							<rect class="g-dark" x="-9" y="-12" width="5" height="14" rx="2" />
@@ -494,7 +541,7 @@
 						</g>
 						<circle class="crt-plug-hit" cx="366" cy="613" r="26" data-cursor="Attrape" data-i18n-attr="data-cursor:game.grab" />
 
-						<!-- Corps -->
+						<!-- Body -->
 						<g class="crt-body">
 							<path class="g-mid" d="M168 600 L186 600 L200 470 L214 600 L232 600 L272 420 L128 420 Z" />
 							<path class="g-dark" d="M126 600 L190 600 Q192 618 176 621 L118 621 Q110 610 126 600 Z" />
@@ -512,7 +559,7 @@
 							<rect class="g-mid" x="166" y="206" width="68" height="18" rx="4" />
 						</g>
 
-						<!-- Tête : un vieil écran cathodique -->
+						<!-- Head: an old CRT monitor -->
 						<g class="crt-head">
 							<path class="g-shade" d="M110 40 L140 22 L322 22 L292 40 Z" />
 							<path class="g-shade-dark" d="M292 40 L322 22 L322 174 L292 192 Z" />
@@ -560,7 +607,7 @@
 			</div>
 		</section>
 
-		<!-- ============ ACTE 3 — EXPÉRIENCES ============ -->
+		<!-- ============ ACT 3 — WORK ============ -->
 		<section class="work" id="code" data-chapter="07" data-chapter-label="Expériences" data-i18n-attr="data-chapter-label:hud.work">
 			<header class="work__head">
 				<p class="kicker">(02) <span data-i18n="work.kicker">Le code, pour de vrai</span></p>
@@ -645,7 +692,7 @@
 			</div>
 		</section>
 
-		<!-- ============ ACTE 5 — HORS ÉCRAN ============ -->
+		<!-- ============ ACT 4 — OFF SCREEN ============ -->
 		<section class="human" id="humain" data-chapter="08" data-chapter-label="Hors écran" data-i18n-attr="data-chapter-label:hud.human">
 			<header class="human__head">
 				<p class="kicker">(03) <span data-i18n="human.kicker">Hors écran</span></p>
@@ -694,7 +741,7 @@
 			</div>
 		</section>
 
-		<!-- ============ ACTE 6 — CONTACT ============ -->
+		<!-- ============ ACT 5 — CONTACT ============ -->
 		<section class="contact" id="contact" data-chapter="09" data-chapter-label="Contact">
 			<div class="contact__grid">
 				<figure class="contact__photo">
@@ -722,7 +769,7 @@
 							<label for="message" data-i18n="form.message">Votre idée (même un peu folle)</label>
 							<textarea id="message" name="message" rows="3" required></textarea>
 						</div>
-						<!-- Champ piège : invisible pour les humains, les robots le remplissent -->
+						<!-- Honeypot field: invisible to humans, bots fill it in -->
 						<div class="field--trap" aria-hidden="true">
 							<label for="website">Ne pas remplir</label>
 							<input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
@@ -759,7 +806,7 @@
 	<script src="/assets/vendor/gsap.min.js?v=3.15.0"></script>
 	<script src="/assets/vendor/ScrollTrigger.min.js?v=3.15.0"></script>
 	<script src="/assets/vendor/lenis.min.js?v=1.3.26"></script>
-	<script src="/assets/js/i18n.js?v=2026.11h"></script>
-	<script src="/assets/js/app.js?v=2026.11g"></script>
+	<script src="/assets/js/i18n.js?v=2026.11k"></script>
+	<script src="/assets/js/app.js?v=2026.11k"></script>
 </body>
 </html>

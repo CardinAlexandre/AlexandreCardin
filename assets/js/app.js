@@ -1,6 +1,16 @@
 /* ==========================================================================
-   Alexandre Cardin — moteur d'animation
-   GSAP + ScrollTrigger + Lenis, sans build.
+   Alexandre Cardin — portfolio
+   Vanilla JavaScript on top of GSAP, ScrollTrigger and Lenis. No build step.
+
+   Contents
+     1. Language                9. Metal: sparks
+     2. Text splitting         10. Metal: welding game
+     3. Toulouse clock         11. Wood: axe throwing
+     4. Contact form           12. Toulouse: sunbeam catcher
+     5. Custom cursor          13. Code: CRT head
+     6. Hero title             14. Code: easter egg
+     7. Marquees               15. Scroll choreography
+     8. Story paging           16. Loader & intro
    ========================================================================== */
 (function () {
 	'use strict';
@@ -22,7 +32,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   1. Langue
+	   1. Language (French lives in the HTML, English in i18n.js)
 	   ---------------------------------------------------------------------- */
 	function t(key) {
 		var dict = lang === 'en' ? window.I18N_EN : window.I18N_FR_DYNAMIC;
@@ -42,7 +52,7 @@
 				});
 			});
 			$('#cv-link').href = '/English-Version-CV-Alexandre-Cardin.pdf';
-			document.title = 'Alexandre Cardin — Metal, wood, code';
+			document.title = 'Alexandre Cardin — C#/.NET full-stack developer · Toulouse';
 		}
 
 		$('#lang-btn').addEventListener('click', function () {
@@ -54,7 +64,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   2. Découpage du texte
+	   2. Text splitting: letters for the big titles, words for the manifesto
 	   ---------------------------------------------------------------------- */
 	function splitLetters(el) {
 		var text = el.textContent.trim();
@@ -87,7 +97,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   3. Horloge Toulouse
+	   3. Toulouse clock
 	   ---------------------------------------------------------------------- */
 	function clock() {
 		var el = $('#clock');
@@ -98,7 +108,8 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   4. Formulaire de contact
+	   4. Contact form
+	   Posts JSON to /api/contact (portfolio-mailer, proxied by nginx).
 	   ---------------------------------------------------------------------- */
 	function contactForm() {
 		var form = $('#contact-form');
@@ -113,7 +124,7 @@
 				name: $('#name').value.trim(),
 				email: $('#email').value.trim(),
 				message: $('#message').value.trim(),
-				website: $('#website').value // champ piège
+				website: $('#website').value // honeypot field
 			};
 			var bad = [];
 			if (!data.name) bad.push('name');
@@ -130,7 +141,7 @@
 			var ctrl = 'AbortController' in window ? new AbortController() : null;
 			var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 20000);
 
-			// Service portfolio-mailer, servi derrière nginx sur la même origine
+			// portfolio-mailer service, proxied by nginx on the same origin
 			fetch('/api/contact', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -175,7 +186,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   5. Curseur, magnétisme
+	   5. Custom cursor and magnetic buttons
 	   ---------------------------------------------------------------------- */
 	var mouse = { x: innerWidth / 2, y: innerHeight / 2, active: false };
 	window.addEventListener('pointermove', function (e) {
@@ -222,7 +233,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   6. Titre hero : la graisse respire sous le curseur
+	   6. Hero title: the font weight "breathes" under the cursor
 	   ---------------------------------------------------------------------- */
 	function breathingTitle() {
 		var letters = $$('.hero__title .ch').map(function (el) { return { el: el, w: 800, s: 75 }; });
@@ -243,7 +254,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   7. Marquees qui accélèrent avec le scroll
+	   7. Marquees that speed up with the scroll velocity
 	   ---------------------------------------------------------------------- */
 	function marquees(getVelocity) {
 		$$('[data-marquee]').forEach(function (track) {
@@ -268,7 +279,108 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   8. Étincelles de soudure
+	   8. Story: strict step-by-step paging
+	   Inside the story, each wheel gesture (or ↑ ↓, Page Up/Down, Space) moves
+	   exactly one step, with a fixed-length transition: the view can never rest
+	   between two steps. Touchpad inertia is swallowed so no step is skipped.
+	   Entering the story snaps to the first or last step; scrolling past either
+	   end leaves the story normally.
+	   ---------------------------------------------------------------------- */
+	function pagedPanels(lenis, st, count) {
+		var DURATION = 0.85, INERTIA_GAP = 160, INERTIA_WINDOW = 900;
+		var animating = false, current = 0, lastWheel = 0, settledAt = 0, guard = null, idle = null;
+
+		function bounds() {
+			var start = st.start, end = st.end;
+			return { start: start, end: end, step: (end - start) / (count - 1) };
+		}
+		function indexAt(y, b) { return Math.max(0, Math.min(count - 1, Math.round((y - b.start) / b.step))); }
+
+		function goTo(i) {
+			var b = bounds();
+			current = i;
+			animating = true;
+			clearTimeout(guard);
+			guard = setTimeout(done, DURATION * 1000 + 400);
+			lenis.scrollTo(b.start + i * b.step, {
+				duration: DURATION, force: true,
+				easing: function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; },
+				onComplete: done
+			});
+		}
+		function done() {
+			clearTimeout(guard);
+			animating = false;
+			settledAt = performance.now();
+		}
+
+		// Mouse wheel: intercepted before Lenis handles it
+		lenis.options.virtualScroll = function (data) {
+			var ev = data.event;
+			if (!ev || ev.type !== 'wheel' || Math.abs(data.deltaY) < 1) return true;
+			var now = performance.now(), gap = now - lastWheel;
+			lastWheel = now;
+			var b = bounds(), y = lenis.scroll, dir = data.deltaY > 0 ? 1 : -1;
+			var inside = y >= b.start - 2 && y <= b.end + 2;
+
+			if (!inside) {
+				// Entering the story: snap to the first (or last) step
+				var to = lenis.targetScroll + data.deltaY;
+				if (dir > 0 && y < b.start && to >= b.start) { ev.preventDefault(); goTo(0); return false; }
+				if (dir < 0 && y > b.end && to <= b.end) { ev.preventDefault(); goTo(count - 1); return false; }
+				return true;
+			}
+
+			// Transition running, or inertia tail of the same gesture: swallow it
+			if (animating || (gap < INERTIA_GAP && now - settledAt < INERTIA_WINDOW)) { ev.preventDefault(); return false; }
+
+			var next = indexAt(y, b) + dir;
+			if (next < 0 || next > count - 1) return true; // leave the story through the top or the bottom
+			ev.preventDefault();
+			goTo(next);
+			return false;
+		};
+
+		// Keyboard: one step per key press
+		function onKey(e) {
+			if (e.defaultPrevented || /input|textarea|select/i.test(e.target.tagName)) return;
+			var dir = 0;
+			if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) dir = 1;
+			else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) dir = -1;
+			if (!dir) return;
+			var b = bounds(), y = lenis.scroll;
+			if (y < b.start - 2 || y > b.end + 2) return;
+			var next = (animating ? current : indexAt(y, b)) + dir;
+			if (next < 0 || next > count - 1) return;
+			e.preventDefault();
+			if (!animating) goTo(next);
+		}
+		window.addEventListener('keydown', onKey);
+
+		// Safety net (scrollbar, anchor link…): if we stop between two steps, snap back
+		var unsubscribe = lenis.on('scroll', function () {
+			if (animating) return;
+			clearTimeout(idle);
+			idle = setTimeout(function () {
+				if (animating) return;
+				var b = bounds(), y = lenis.scroll;
+				if (y < b.start + 2 || y > b.end - 2) return;
+				var i = indexAt(y, b);
+				if (Math.abs(b.start + i * b.step - y) > 2) goTo(i);
+				else current = i;
+			}, 220);
+		});
+
+		return function () {
+			lenis.options.virtualScroll = undefined;
+			window.removeEventListener('keydown', onKey);
+			clearTimeout(guard); clearTimeout(idle);
+			if (typeof unsubscribe === 'function') unsubscribe();
+		};
+	}
+
+	/* ----------------------------------------------------------------------
+	   9. Metal: welding sparks (canvas)
 	   ---------------------------------------------------------------------- */
 	function sparks(weld) {
 		var canvas = $('.sparks');
@@ -288,7 +400,7 @@
 		function frame(now) {
 			if (!running) return;
 			t0 += 0.016;
-			// Chalumeau du joueur s'il soude, sinon démonstration le long du joint
+			// Player's torch while welding, otherwise an idle demo along the seam
 			var torch = weld.torch.active ? weld.torch : weld.idlePoint(0.5 + 0.5 * Math.sin(t0 * 0.35));
 			var pr = panel.getBoundingClientRect();
 			var ex = (torch.x - pr.left) * (W / pr.width), ey = (torch.y - pr.top) * (H / pr.height);
@@ -329,152 +441,10 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   8 ter. Lancer de haches sur le rondin
-	   Un clic sur le rondin y plante une hache. Au-delà de MAX haches,
-	   la plus ancienne tombe pour laisser la place.
-	   ---------------------------------------------------------------------- */
-	function axeThrowing() {
-		var target = $('.art-wood');
-		if (!target) return;
-		var log = $('svg', target);
-		var MAX = 10, axes = [];
-		var panel = target.closest('.panel');
-		var scoreEl = $('.scoreboard__score', target), comboEl = $('.scoreboard__combo', target);
-		var score = 0, combo = 0;
-		// Décalage pour que le tranchant tombe pile sur le point cliqué
-		var ANCHOR = { xPercent: -5.7, yPercent: -50.7 };
-		// Hache viking barbue : lame en croissant, barbe le long du manche, manche cerclé de cuir.
-		// Le tranchant (point d'impact) est en (8, 71) dans le viewBox 140×140.
-		var markup = '<svg viewBox="0 0 140 140" aria-hidden="true">' +
-			'<ellipse class="axe__cut" cx="8" cy="71" rx="17" ry="4" transform="rotate(60 8 71)" />' +
-			'<path class="axe__handle-out" d="M34 34 L126 126" /><path class="axe__handle" d="M34 34 L126 126" />' +
-			'<path class="axe__grain" d="M66 66 L92 92" />' +
-			'<path class="axe__wrap" d="M95 103 L103 95 M102 110 L110 102 M109 117 L117 109" />' +
-			'<circle class="axe__knob" cx="127" cy="127" r="6" />' +
-			'<path class="axe__head" d="M39 39 C30 41 15 37 3 48 C-1 66 11 90 35 94 C40 84 50 70 60 60 L52 52 Z" />' +
-			'<path class="axe__bevel" d="M13 51 C9 64 17 80 33 86" />' +
-			'<path class="axe__edge" d="M5 51 C2 67 13 86 33 91" />' +
-			'<path class="axe__rune" d="M26 57 L32 63 L26 69 L20 63 Z M33 50 L37 46 M39 57 L43 53" />' +
-			'<circle class="axe__eye" cx="45" cy="45" r="3.2" />' +
-			'</svg>';
-
-		target.addEventListener('click', function (e) {
-			// Seulement sur le bois : le fond transparent du SVG ne compte pas
-			if (e.target === log || !log.contains(e.target)) return;
-			var r = target.getBoundingClientRect();
-			throwAxe((e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100);
-		});
-
-		function throwAxe(x, y) {
-			var axe = document.createElement('div');
-			axe.className = 'axe';
-			axe.style.left = x + '%';
-			axe.style.top = y + '%';
-			axe.innerHTML = markup;
-			target.appendChild(axe);
-			axes.push(axe);
-			if (axes.length > MAX) dropAxe(axes.shift());
-
-			var tilt = gsap.utils.random(-30, 24);
-			if (reduce) { gsap.set(axe, Object.assign({ rotate: tilt }, ANCHOR)); resolveHit(x, y, axe); return; }
-
-			var size = target.offsetWidth;
-			gsap.timeline()
-				.fromTo(axe,
-					Object.assign({ x: size * 1.2, y: size * 0.8, scale: 2.6, rotate: tilt + 1080 }, ANCHOR),
-					{ x: 0, y: 0, scale: 1, rotate: tilt, duration: 0.45, ease: 'power2.in' })
-				.add(function () { impact(x, y); resolveHit(x, y, axe); })
-				.fromTo(axe.firstChild, { rotate: 9 }, { rotate: 0, duration: 0.7, ease: 'elastic.out(1.2, .25)' });
-		}
-
-		function impact(x, y) {
-			gsap.fromTo(log, { x: -6, y: 3 }, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, .3)', overwrite: true });
-			for (var i = 0; i < 7; i++) {
-				var chip = document.createElement('span');
-				chip.className = 'woodchip';
-				chip.style.left = x + '%';
-				chip.style.top = y + '%';
-				target.appendChild(chip);
-				gsap.to(chip, {
-					x: gsap.utils.random(-70, 70), y: gsap.utils.random(-80, 10), rotate: gsap.utils.random(-360, 360),
-					opacity: 0, duration: gsap.utils.random(0.5, 0.9), ease: 'power2.out',
-					onComplete: chip.remove.bind(chip)
-				});
-			}
-		}
-
-		// La hache vient de se planter : a-t-elle cloué une feuille d'érable au passage ?
-		function resolveHit(x, y, axe) {
-			var r = target.getBoundingClientRect();
-			var px = r.left + x / 100 * r.width, py = r.top + y / 100 * r.height;
-			var hit = null, best = Infinity;
-			$$('.maple:not(.maple--pinned)', panel).forEach(function (leaf) {
-				var lr = leaf.getBoundingClientRect();
-				var d = Math.hypot(px - (lr.left + lr.width / 2), py - (lr.top + lr.height / 2));
-				if (d < lr.width * 0.6 + 8 && d < best) { best = d; hit = leaf; }
-			});
-
-			if (!hit) { combo = 0; renderScore(); return; }
-
-			combo += 1;
-			score += combo; // 1 point + bonus de combo (0, 1, 2… pour chaque coup réussi d'affilée)
-			renderScore(true);
-			pinLeaf(axe);
-			respawn(hit);
-			popScore(x, y, combo);
-		}
-
-		function pinLeaf(axe) {
-			var leaf = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			leaf.setAttribute('class', 'maple maple--pinned');
-			leaf.innerHTML = '<use href="#maple-leaf" />';
-			axe.insertBefore(leaf, axe.firstChild);
-			gsap.fromTo(leaf, { scale: 1.6, rotate: gsap.utils.random(-50, 50) }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
-		}
-
-		// La feuille touchée repart du haut, comme une nouvelle
-		function respawn(leaf) {
-			leaf.style.animation = 'none';
-			void leaf.getBoundingClientRect();
-			leaf.style.animation = '';
-			leaf.style.animationDelay = '0s, ' + (-Math.random() * 2).toFixed(2) + 's';
-		}
-
-		function renderScore(bump) {
-			scoreEl.textContent = score;
-			comboEl.textContent = 'x' + combo;
-			if (bump && !reduce) gsap.fromTo([scoreEl, comboEl], { scale: 1.5 }, { scale: 1, duration: 0.4, ease: 'back.out(3)' });
-		}
-
-		function popScore(x, y, n) {
-			var pop = document.createElement('span');
-			pop.className = 'score-pop';
-			pop.style.left = x + '%';
-			pop.style.top = y + '%';
-			pop.innerHTML = '+' + n + (n > 1 ? '<small>COMBO x' + n + '</small>' : '');
-			target.appendChild(pop);
-			if (reduce) { setTimeout(pop.remove.bind(pop), 900); return; }
-			gsap.fromTo(pop, { y: 0, scale: 0.6, opacity: 1 }, {
-				y: -90, scale: 1, opacity: 0, duration: 1.1, ease: 'power2.out',
-				onComplete: pop.remove.bind(pop)
-			});
-		}
-
-		function dropAxe(axe) {
-			if (reduce) { axe.remove(); return; }
-			gsap.to(axe, {
-				y: '+=' + target.offsetHeight * 0.7, rotate: '+=' + gsap.utils.random(70, 140), opacity: 0,
-				duration: 0.6, ease: 'power2.in', overwrite: true,
-				onComplete: axe.remove.bind(axe)
-			});
-		}
-	}
-
-	/* ----------------------------------------------------------------------
-	   8 quater. Mini-jeu de soudure (chantier Piriou)
-	   On maintient le clic sur le point de départ et on suit le joint.
-	   Note = longueur soudée × (précision + régularité de la vitesse).
-	   Trop vite : des trous dans le cordon. Trop lent : ça brûle.
+	   10. Metal: welding mini-game (Piriou shipyard)
+	   Hold the click on the start dot and follow the seam.
+	   Grade = welded length × (accuracy + steady speed).
+	   Too fast leaves holes in the bead, too slow burns it.
 	   ---------------------------------------------------------------------- */
 	function weldingGame() {
 		var art = $('.art-ship');
@@ -484,9 +454,11 @@
 		var beads = $('.weld-beads', svg);
 		var lastEl = $('.weld-last', art), bestEl = $('.weld-best', art);
 
-		// Joints de la coque (coordonnées du SVG 600×400)
+		// Hull seams (600×400 SVG coordinates)
 		var SEAMS = ['M118 228 H470', 'M126 270 H520', 'M358 194 V318', 'M150 300 C250 312 380 312 486 290'];
-		var SAMPLES = 120, TOL = 26, SLOW = 70, FAST = 430; // tolérance (px SVG) et vitesses en unités SVG / s
+		var coarse = window.matchMedia('(pointer: coarse)').matches;
+		var SAMPLES = 120, TOL = coarse ? 42 : 26, SLOW = 70, FAST = 430; // tolerance (SVG units, wider for fingers) and speeds in SVG units per second
+		if (coarse) zone.style.strokeWidth = '72';
 		var pts = [], seamIndex = -1, best = 0, cooling = false;
 		var torch = { active: false, x: 0, y: 0 };
 		var run = null;
@@ -534,6 +506,11 @@
 			setTimeout(function () { c.classList.remove('hot'); }, 450);
 		}
 
+		// Mobile: a finger on the seam must not scroll the page
+		// (several mobile browsers ignore touch-action on SVG elements).
+		zone.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
+		zone.addEventListener('touchmove', function (e) { if (run) e.preventDefault(); }, { passive: false });
+
 		zone.addEventListener('pointerdown', function (e) {
 			if (cooling || run) return;
 			var p = toSvg(e.clientX, e.clientY);
@@ -551,7 +528,7 @@
 			var now = performance.now(), p = toSvg(e.clientX, e.clientY);
 			var dt = Math.max(1, now - run.lastTime) / 1000;
 			var inst = Math.hypot(p.x - run.last.x, p.y - run.last.y) / dt;
-			run.speed = run.speed * 0.7 + inst * 0.3; // vitesse lissée
+			run.speed = run.speed * 0.7 + inst * 0.3; // smoothed speed
 			run.last = p; run.lastTime = now;
 			torch.x = e.clientX; torch.y = e.clientY;
 
@@ -559,7 +536,7 @@
 			if (n.d < TOL * 1.4) run.progress = Math.max(run.progress, n.i);
 			run.samples.push({ dev: n.d, speed: run.speed });
 
-			// Le cordon se dépose par gouttes ; trop vite = trous, trop lent = brûlé
+			// The bead is laid drop by drop: too fast leaves holes, too slow burns
 			if (Math.hypot(p.x - run.lastBead.x, p.y - run.lastBead.y) >= 3) {
 				if (run.speed <= FAST) bead(p, run.speed < SLOW ? 'burn' : '');
 				run.lastBead = p;
@@ -590,7 +567,7 @@
 			var verdict = score >= 90 ? 'game.v1' : score >= 75 ? 'game.v2' : score >= 50 ? 'game.v3' : 'game.v4';
 			stamp(score + '%', t(verdict));
 
-			// On laisse refroidir le cordon, puis on passe au joint suivant
+			// Let the bead cool down, then move on to the next seam
 			cooling = true;
 			setTimeout(function () {
 				var old = beads.querySelectorAll('circle');
@@ -615,16 +592,158 @@
 
 		return {
 			torch: torch,
-			// Point de démo du chalumeau, k ∈ [0, 1] le long du joint, en coordonnées écran
+			// Demo torch position, k ∈ [0, 1] along the seam, in screen coordinates
 			idlePoint: function (k) { return toScreen(pts[Math.round(k * SAMPLES)]); }
 		};
 	}
 
 	/* ----------------------------------------------------------------------
-	   8 quinquies. Mini-jeu de Toulouse : la brique attrape les rayons
-	   La brique se pilote uniquement à la souris : un clic l'attrape, un autre la lâche.
-	   Chaque rayon attrapé : 1 point + bonus de combo. Un rayon manqué
-	   remet le combo à zéro. Le jeu ne tourne que si l'étape est à l'écran.
+	   11. Wood: axe throwing mini-game
+	   Clicking the log plants a Viking axe in it (10 at most, the oldest falls).
+	   Pinning a falling maple leaf scores 1 point + a combo bonus; a miss resets the combo.
+	   ---------------------------------------------------------------------- */
+	function axeThrowing() {
+		var target = $('.art-wood');
+		if (!target) return;
+		var log = $('svg', target);
+		var MAX = 10, axes = [];
+		var panel = target.closest('.panel');
+		var scoreEl = $('.scoreboard__score', target), comboEl = $('.scoreboard__combo', target);
+		var score = 0, combo = 0;
+		// Offset so the blade edge lands exactly on the clicked point
+		var ANCHOR = { xPercent: -5.7, yPercent: -50.7 };
+		// Bearded Viking axe: crescent blade, beard along the haft, leather-wrapped handle.
+		// The blade edge (impact point) sits at (8, 71) in the 140×140 viewBox.
+		var markup = '<svg viewBox="0 0 140 140" aria-hidden="true">' +
+			'<ellipse class="axe__cut" cx="8" cy="71" rx="17" ry="4" transform="rotate(60 8 71)" />' +
+			'<path class="axe__handle-out" d="M34 34 L126 126" /><path class="axe__handle" d="M34 34 L126 126" />' +
+			'<path class="axe__grain" d="M66 66 L92 92" />' +
+			'<path class="axe__wrap" d="M95 103 L103 95 M102 110 L110 102 M109 117 L117 109" />' +
+			'<circle class="axe__knob" cx="127" cy="127" r="6" />' +
+			'<path class="axe__head" d="M39 39 C30 41 15 37 3 48 C-1 66 11 90 35 94 C40 84 50 70 60 60 L52 52 Z" />' +
+			'<path class="axe__bevel" d="M13 51 C9 64 17 80 33 86" />' +
+			'<path class="axe__edge" d="M5 51 C2 67 13 86 33 91" />' +
+			'<path class="axe__rune" d="M26 57 L32 63 L26 69 L20 63 Z M33 50 L37 46 M39 57 L43 53" />' +
+			'<circle class="axe__eye" cx="45" cy="45" r="3.2" />' +
+			'</svg>';
+
+		target.addEventListener('click', function (e) {
+			// Only on the wood itself: the transparent SVG background doesn't count
+			if (e.target === log || !log.contains(e.target)) return;
+			var r = target.getBoundingClientRect();
+			throwAxe((e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100);
+		});
+
+		function throwAxe(x, y) {
+			var axe = document.createElement('div');
+			axe.className = 'axe';
+			axe.style.left = x + '%';
+			axe.style.top = y + '%';
+			axe.innerHTML = markup;
+			target.appendChild(axe);
+			axes.push(axe);
+			if (axes.length > MAX) dropAxe(axes.shift());
+
+			var tilt = gsap.utils.random(-30, 24);
+			if (reduce) { gsap.set(axe, Object.assign({ rotate: tilt }, ANCHOR)); resolveHit(x, y, axe); return; }
+
+			var size = target.offsetWidth;
+			gsap.timeline()
+				.fromTo(axe,
+					Object.assign({ x: size * 1.2, y: size * 0.8, scale: 2.6, rotate: tilt + 1080 }, ANCHOR),
+					{ x: 0, y: 0, scale: 1, rotate: tilt, duration: 0.45, ease: 'power2.in' })
+				.add(function () { impact(x, y); resolveHit(x, y, axe); })
+				.fromTo(axe.firstChild, { rotate: 9 }, { rotate: 0, duration: 0.7, ease: 'elastic.out(1.2, .25)' });
+		}
+
+		function impact(x, y) {
+			gsap.fromTo(log, { x: -6, y: 3 }, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, .3)', overwrite: true });
+			for (var i = 0; i < 7; i++) {
+				var chip = document.createElement('span');
+				chip.className = 'woodchip';
+				chip.style.left = x + '%';
+				chip.style.top = y + '%';
+				target.appendChild(chip);
+				gsap.to(chip, {
+					x: gsap.utils.random(-70, 70), y: gsap.utils.random(-80, 10), rotate: gsap.utils.random(-360, 360),
+					opacity: 0, duration: gsap.utils.random(0.5, 0.9), ease: 'power2.out',
+					onComplete: chip.remove.bind(chip)
+				});
+			}
+		}
+
+		// The axe just landed: did it pin a maple leaf on its way?
+		function resolveHit(x, y, axe) {
+			var r = target.getBoundingClientRect();
+			var px = r.left + x / 100 * r.width, py = r.top + y / 100 * r.height;
+			var hit = null, best = Infinity;
+			$$('.maple:not(.maple--pinned)', panel).forEach(function (leaf) {
+				var lr = leaf.getBoundingClientRect();
+				var d = Math.hypot(px - (lr.left + lr.width / 2), py - (lr.top + lr.height / 2));
+				if (d < lr.width * 0.6 + 8 && d < best) { best = d; hit = leaf; }
+			});
+
+			if (!hit) { combo = 0; renderScore(); return; }
+
+			combo += 1;
+			score += combo; // 1 point + combo bonus (0, 1, 2… for each consecutive hit)
+			renderScore(true);
+			pinLeaf(axe);
+			respawn(hit);
+			popScore(x, y, combo);
+		}
+
+		function pinLeaf(axe) {
+			var leaf = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			leaf.setAttribute('class', 'maple maple--pinned');
+			leaf.innerHTML = '<use href="#maple-leaf" />';
+			axe.insertBefore(leaf, axe.firstChild);
+			gsap.fromTo(leaf, { scale: 1.6, rotate: gsap.utils.random(-50, 50) }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
+		}
+
+		// The hit leaf starts falling again from the top, like a new one
+		function respawn(leaf) {
+			leaf.style.animation = 'none';
+			void leaf.getBoundingClientRect();
+			leaf.style.animation = '';
+			leaf.style.animationDelay = '0s, ' + (-Math.random() * 2).toFixed(2) + 's';
+		}
+
+		function renderScore(bump) {
+			scoreEl.textContent = score;
+			comboEl.textContent = 'x' + combo;
+			if (bump && !reduce) gsap.fromTo([scoreEl, comboEl], { scale: 1.5 }, { scale: 1, duration: 0.4, ease: 'back.out(3)' });
+		}
+
+		function popScore(x, y, n) {
+			var pop = document.createElement('span');
+			pop.className = 'score-pop';
+			pop.style.left = x + '%';
+			pop.style.top = y + '%';
+			pop.innerHTML = '+' + n + (n > 1 ? '<small>COMBO x' + n + '</small>' : '');
+			target.appendChild(pop);
+			if (reduce) { setTimeout(pop.remove.bind(pop), 900); return; }
+			gsap.fromTo(pop, { y: 0, scale: 0.6, opacity: 1 }, {
+				y: -90, scale: 1, opacity: 0, duration: 1.1, ease: 'power2.out',
+				onComplete: pop.remove.bind(pop)
+			});
+		}
+
+		function dropAxe(axe) {
+			if (reduce) { axe.remove(); return; }
+			gsap.to(axe, {
+				y: '+=' + target.offsetHeight * 0.7, rotate: '+=' + gsap.utils.random(70, 140), opacity: 0,
+				duration: 0.6, ease: 'power2.in', overwrite: true,
+				onComplete: axe.remove.bind(axe)
+			});
+		}
+	}
+
+	/* ----------------------------------------------------------------------
+	   12. Toulouse: sunbeam catcher mini-game
+	   The brick is played with the mouse only: one click grabs it, another drops it.
+	   Each caught sunbeam scores 1 point + a combo bonus; a missed one resets the combo.
+	   The game only runs while the Toulouse step is on screen.
 	   ---------------------------------------------------------------------- */
 	function sunCatcher() {
 		var panel = $('.panel--sun');
@@ -644,8 +763,8 @@
 		size();
 		window.addEventListener('resize', size);
 
-		// La brique s'attrape à la souris : un clic l'attrape, elle suit alors le pointeur,
-		// un autre clic la lâche. Un appui long (ou un glisser) la lâche au relâchement.
+		// The brick is grabbed with the mouse: one click picks it up and it follows the pointer,
+		// another click drops it. A long press (or a drag) drops it on release.
 		var grabbed = false, pressing = false, pressStart = 0, pressMoved = 0, lastPX = 0, grabOffset = 0;
 		var LONG_PRESS = 280;
 		function pointerX(e) {
@@ -664,7 +783,7 @@
 			grabOffset = pointerX(e) - bx;
 			pressing = true; pressStart = performance.now(); pressMoved = 0; lastPX = e.clientX;
 		});
-		// Un clic ailleurs pendant qu'on tient la brique la lâche aussi
+		// Clicking anywhere else while holding the brick drops it too
 		window.addEventListener('pointerdown', function (e) {
 			if (grabbed && e.target !== brick) setGrabbed(false);
 		});
@@ -678,7 +797,7 @@
 			pressing = false;
 			if (grabbed && (performance.now() - pressStart > LONG_PRESS || pressMoved > 12)) setGrabbed(false);
 		});
-		// Sur écran tactile, glisser le doigt n'importe où sur l'étape déplace aussi la brique
+		// On touch screens, dragging a finger anywhere on the step also moves the brick
 		panel.addEventListener('pointermove', function (e) {
 			if (e.pointerType === 'touch' && !grabbed) target = pointerX(e);
 		});
@@ -690,7 +809,7 @@
 
 		function caught(ray) {
 			combo += 1;
-			score += combo; // 1 point + bonus de combo pour chaque rayon attrapé d'affilée
+			score += combo; // 1 point + combo bonus for each consecutive catch
 			render();
 			gsap.fromTo([scoreEl, comboEl], { scale: 1.5 }, { scale: 1, duration: 0.4, ease: 'back.out(3)' });
 			brick.classList.add('is-catching');
@@ -712,7 +831,7 @@
 		}
 
 		function drawRay(r) {
-			// Un rayon : un éclat doré allongé, légèrement incliné, avec une traînée lumineuse
+			// A sunbeam: an elongated golden shard, slightly tilted, with a glowing trail
 			ctx.save();
 			ctx.translate(r.x, r.y);
 			ctx.rotate(-0.22);
@@ -742,7 +861,7 @@
 			bx += (target - bx) * Math.min(1, dt * 18);
 			brick.style.transform = 'translateX(' + (bx - half).toFixed(1) + 'px)';
 
-			// De plus en plus de rayons, de plus en plus vite, quand le combo monte
+			// More and faster sunbeams as the combo grows
 			var pace = 1 + Math.min(combo, 30) * 0.035;
 			if (now >= nextSpawn) {
 				rays.push({ x: W * 0.06 + Math.random() * W * 0.88, y: -40, v: (170 + Math.random() * 90) * pace, len: 40 + Math.random() * 18, w: 11 + Math.random() * 4 });
@@ -763,7 +882,7 @@
 			requestAnimationFrame(frame);
 		}
 
-		// On ne joue que lorsque l'étape Toulouse est vraiment à l'écran
+		// Only play while the Toulouse step is actually on screen
 		new IntersectionObserver(function (en) {
 			var visible = en[0].intersectionRatio >= 0.6;
 			if (visible && !running) {
@@ -780,16 +899,16 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   8 sexies. L'homme-écran tourne la tête vers la souris
+	   13. Code: the CRT-head man turns his head towards the cursor
 	   ---------------------------------------------------------------------- */
 	function crtHead() {
 		var man = $('.crt-man');
 		if (!man) return;
 		var head = $('.crt-head', man);
-		gsap.set(head, { svgOrigin: '200 210' }); // la tête pivote sur le cou
+		gsap.set(head, { svgOrigin: '200 210' }); // the head pivots on the neck
 		var rotTo = gsap.quickTo(head, 'rotation', { duration: 0.8, ease: 'power3.out' });
 		man.closest('.panel').addEventListener('pointermove', function (e) {
-			if (man.classList.contains('is-busy')) return; // pendant l'électrocution, il ne regarde plus la souris
+			if (man.classList.contains('is-busy')) return; // while being electrocuted, he stops looking at the cursor
 			var r = man.getBoundingClientRect();
 			var dx = (e.clientX - (r.left + r.width / 2)) / innerWidth;
 			var dy = (e.clientY - (r.top + r.height * 0.2)) / innerHeight;
@@ -798,10 +917,10 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   8 septies. Easter egg de l'homme-écran
-	   On attrape la fiche au bout du câble (un clic l'attrape, un autre la
-	   lâche, un appui long la lâche au relâchement) : une prise murale apparaît.
-	   Brancher la fiche l'électrocute… puis il redémarre comme neuf.
+	   14. Code: CRT man easter egg
+	   Grab the plug at the end of the cable (click to grab, click again to drop,
+	   a long press drops it on release): a wall socket appears. Plugging it in
+	   electrocutes him… then he reboots, good as new.
 	   ---------------------------------------------------------------------- */
 	function crtEasterEgg() {
 		var man = $('.crt-man');
@@ -813,10 +932,12 @@
 		var bootUi = $('.crt-bootui', man), bar = $('.crt-bar', man);
 		gsap.set(head, { svgOrigin: '200 210' });
 
-		var REST = { x: 366, y: 613 };            // fiche posée au sol
-		var SOCKET = { x: 52, y: 505 };           // fiche enfichée (les broches dans les trous)
+		var REST = { x: 366, y: 613 };            // plug lying on the floor
+		var SOCKET = { x: 52, y: 505 };           // plug in the socket (prongs in the holes)
 		var CABLE_REST = cable.getAttribute('d');
-		var SNAP = 20, LONG_PRESS = 280;
+		var coarse = window.matchMedia('(pointer: coarse)').matches;
+		var SNAP = coarse ? 34 : 20, LONG_PRESS = 280;
+		if (coarse) hit.setAttribute('r', '44'); // larger grab area for fingers
 		var plugPos = { x: REST.x, y: REST.y };
 		var grabbed = false, pressing = false, pressStart = 0, pressMoved = 0, busy = false;
 
@@ -829,7 +950,7 @@
 			plug.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
 			hit.setAttribute('cx', p.x.toFixed(1)); hit.setAttribute('cy', p.y.toFixed(1));
 			if (restCable) { cable.setAttribute('d', CABLE_REST); return; }
-			// Le câble pend entre l'écran et la fiche
+			// The cable hangs between the screen and the plug
 			var sag = Math.max(p.y, 150) + 90;
 			cable.setAttribute('d', 'M318 150 C358 172 ' + ((318 + p.x) / 2 + 24).toFixed(1) + ' ' + sag.toFixed(1) + ' ' + p.x.toFixed(1) + ' ' + (p.y - 7).toFixed(1));
 		}
@@ -848,6 +969,10 @@
 			gsap.to(from, { x: REST.x, y: REST.y, duration: 0.7, ease: 'bounce.out', onUpdate: function () { setPlug(from); }, onComplete: function () { setPlug(REST, true); man.classList.remove('is-busy'); } });
 			gsap.to(socket, { opacity: 0, duration: 0.4 });
 		}
+
+		// Mobile: grabbing or holding the plug must not scroll the page
+		hit.addEventListener('touchstart', function (e) { if (!busy) e.preventDefault(); }, { passive: false });
+		window.addEventListener('touchmove', function (e) { if (grabbed) e.preventDefault(); }, { passive: false });
 
 		hit.addEventListener('pointerdown', function (e) {
 			if (busy) return;
@@ -897,14 +1022,14 @@
 					man.classList.remove('is-busy');
 				}
 			})
-				// 1. Le courant passe : éclairs, image inversée, tremblements, écran brouillé
+				// 1. Current flows: lightning, inverted image, shaking, scrambled screen
 				.add(function () { man.classList.add('is-zapped'); text.textContent = '#%!@?'; })
 				.set(bolts, { opacity: 1 })
 				.to(bolts, { opacity: 0.15, duration: 0.05, repeat: 21, yoyo: true }, '<')
 				.to(jitter, { x: 'random(-7, 7)', y: 'random(-5, 5)', duration: 0.045, repeat: 24, repeatRefresh: true, yoyo: true }, '<')
 				.add(function () { text.textContent = '!@#$%'; }, 0.4)
 				.add(function () { text.textContent = '?!%#&'; }, 0.8)
-				// 2. Court-circuit : l'écran s'éteint comme un vieux tube, il s'affaisse, ça fume
+				// 2. Short circuit: the screen switches off like an old tube, he slumps, smoke rises
 				.add(function () { man.classList.remove('is-zapped'); text.style.visibility = 'hidden'; caret.style.visibility = 'hidden'; }, 1.15)
 				.set(bolts, { opacity: 0 }, 1.15)
 				.set(jitter, { x: 0, y: 0 }, 1.15)
@@ -914,7 +1039,7 @@
 				.to(head, { rotation: 16, y: 10, duration: 0.5, ease: 'power2.out' }, 1.3)
 				.to(body, { y: 8, duration: 0.5, ease: 'power2.out' }, 1.3)
 				.add(smoke, 1.5)
-				// 3. La fiche saute du mur et retombe, la prise disparaît
+				// 3. The plug pops out of the wall and falls back, the socket fades away
 				.add(function () {
 					var from = { x: SOCKET.x, y: SOCKET.y };
 					gsap.timeline()
@@ -922,7 +1047,7 @@
 						.to(from, { x: REST.x, y: REST.y, duration: 0.8, ease: 'bounce.out', onUpdate: function () { setPlug(from); }, onComplete: function () { setPlug(REST, true); } });
 					gsap.to(socket, { opacity: 0, duration: 0.5, delay: 0.3 });
 				}, 2.4)
-				// 4. Redémarrage : BOOT, barre de progression, il se redresse
+				// 4. Reboot: BOOT screen, progress bar, he stands back up
 				.set(bar, { attr: { width: 0 } }, 3)
 				.to(bootUi, { opacity: 1, duration: 0.2 }, 3)
 				.to(bar, { attr: { width: 96 }, duration: 1.1, ease: 'steps(12)' }, 3.1)
@@ -934,109 +1059,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   8 bis. Histoire page par page
-	   Dans l'histoire, chaque geste de molette (ou ↑ ↓, Page préc./suiv.,
-	   Espace) fait passer exactement à l'étape voisine, avec une transition
-	   de durée fixe : on ne peut jamais rester à cheval entre deux étapes.
-	   L'inertie du pavé tactile est absorbée pour ne pas sauter d'étape.
-	   En arrivant dans l'histoire, on se cale sur la première ou la dernière
-	   étape ; depuis les extrémités, on en sort normalement.
-	   ---------------------------------------------------------------------- */
-	function pagedPanels(lenis, st, count) {
-		var DURATION = 0.85, INERTIA_GAP = 160, INERTIA_WINDOW = 900;
-		var animating = false, current = 0, lastWheel = 0, settledAt = 0, guard = null, idle = null;
-
-		function bounds() {
-			var start = st.start, end = st.end;
-			return { start: start, end: end, step: (end - start) / (count - 1) };
-		}
-		function indexAt(y, b) { return Math.max(0, Math.min(count - 1, Math.round((y - b.start) / b.step))); }
-
-		function goTo(i) {
-			var b = bounds();
-			current = i;
-			animating = true;
-			clearTimeout(guard);
-			guard = setTimeout(done, DURATION * 1000 + 400);
-			lenis.scrollTo(b.start + i * b.step, {
-				duration: DURATION, force: true,
-				easing: function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; },
-				onComplete: done
-			});
-		}
-		function done() {
-			clearTimeout(guard);
-			animating = false;
-			settledAt = performance.now();
-		}
-
-		// Molette : interceptée avant que Lenis ne la traite
-		lenis.options.virtualScroll = function (data) {
-			var ev = data.event;
-			if (!ev || ev.type !== 'wheel' || Math.abs(data.deltaY) < 1) return true;
-			var now = performance.now(), gap = now - lastWheel;
-			lastWheel = now;
-			var b = bounds(), y = lenis.scroll, dir = data.deltaY > 0 ? 1 : -1;
-			var inside = y >= b.start - 2 && y <= b.end + 2;
-
-			if (!inside) {
-				// On arrive dans l'histoire : on se cale sur la première (ou la dernière) étape
-				var to = lenis.targetScroll + data.deltaY;
-				if (dir > 0 && y < b.start && to >= b.start) { ev.preventDefault(); goTo(0); return false; }
-				if (dir < 0 && y > b.end && to <= b.end) { ev.preventDefault(); goTo(count - 1); return false; }
-				return true;
-			}
-
-			// Transition en cours, ou traîne d'inertie du même geste : on absorbe
-			if (animating || (gap < INERTIA_GAP && now - settledAt < INERTIA_WINDOW)) { ev.preventDefault(); return false; }
-
-			var next = indexAt(y, b) + dir;
-			if (next < 0 || next > count - 1) return true; // on sort de l'histoire par le haut ou le bas
-			ev.preventDefault();
-			goTo(next);
-			return false;
-		};
-
-		// Clavier : une étape par touche
-		function onKey(e) {
-			if (e.defaultPrevented || /input|textarea|select/i.test(e.target.tagName)) return;
-			var dir = 0;
-			if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) dir = 1;
-			else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) dir = -1;
-			if (!dir) return;
-			var b = bounds(), y = lenis.scroll;
-			if (y < b.start - 2 || y > b.end + 2) return;
-			var next = (animating ? current : indexAt(y, b)) + dir;
-			if (next < 0 || next > count - 1) return;
-			e.preventDefault();
-			if (!animating) goTo(next);
-		}
-		window.addEventListener('keydown', onKey);
-
-		// Filet de sécurité (barre de défilement, lien…) : si on s'arrête entre deux étapes, on se recale
-		var unsubscribe = lenis.on('scroll', function () {
-			if (animating) return;
-			clearTimeout(idle);
-			idle = setTimeout(function () {
-				if (animating) return;
-				var b = bounds(), y = lenis.scroll;
-				if (y < b.start + 2 || y > b.end - 2) return;
-				var i = indexAt(y, b);
-				if (Math.abs(b.start + i * b.step - y) > 2) goTo(i);
-				else current = i;
-			}, 220);
-		});
-
-		return function () {
-			lenis.options.virtualScroll = undefined;
-			window.removeEventListener('keydown', onKey);
-			clearTimeout(guard); clearTimeout(idle);
-			if (typeof unsubscribe === 'function') unsubscribe();
-		};
-	}
-
-	/* ----------------------------------------------------------------------
-	   9. Chorégraphie au scroll
+	   15. Scroll choreography
 	   ---------------------------------------------------------------------- */
 	function scrollScenes(lenis) {
 		var hudNum = $('#hud-num'), hudLabel = $('#hud-label');
@@ -1047,7 +1070,7 @@
 
 		gsap.to('#hud-progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
 
-		// Hero : parallaxe de sortie
+		// Hero: exit parallax
 		gsap.to('.hero__portrait', { yPercent: -30, rotate: 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 		gsap.to('.hero__line', { xPercent: function (i) { return i ? 12 : -12; }, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 		$$('[data-float]').forEach(function (el) {
@@ -1057,7 +1080,7 @@
 
 		var mm = gsap.matchMedia();
 
-		// Manifeste : les mots s'allument un à un
+		// Manifesto: words light up one by one
 		var words = $$('.manifesto__text .w');
 		var swatches = $$('.swatch');
 		var swatchFrom = { yPercent: 70, opacity: 0, rotate: function (i) { return [-28, 24, -18][i]; }, ease: 'back.out(1.4)' };
@@ -1065,7 +1088,7 @@
 			var tl = gsap.timeline({ scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '+=140%', pin: true, scrub: 0.6 } })
 				.to(words, { opacity: 1, stagger: 0.1, ease: 'none' })
 				.from('.manifesto .chip', { rotate: function (i) { return [-12, 9, -7][i % 3]; }, scale: 0.6, stagger: 0.3, ease: 'back.out(3)' }, 0.2);
-			// Métal, bois, code : chaque échantillon se pose quand on lit le mot correspondant
+			// Metal, wood, code: each swatch lands as its word is read
 			var total = words.length * 0.1;
 			swatches.forEach(function (sw, i) {
 				tl.from(sw, Object.assign({}, swatchFrom, { rotate: swatchFrom.rotate(i), duration: total * 0.18 }), total * [0.08, 0.22, 0.62][i]);
@@ -1076,7 +1099,7 @@
 			gsap.from(swatches, Object.assign({}, swatchFrom, { stagger: 0.15, duration: 1, scrollTrigger: { trigger: '.swatches', start: 'top 80%' } }));
 		});
 
-		// Histoire : scroll horizontal
+		// Story: horizontal scroll
 		var track = $('.story__track');
 		var panels = $$('.panel');
 		mm.add('(min-width: 901px)', function () {
@@ -1086,21 +1109,30 @@
 				scrollTrigger: { trigger: '.story', start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: true, invalidateOnRefresh: true }
 			});
 			var unsnap = lenis ? pagedPanels(lenis, h.scrollTrigger, panels.length) : null;
-			panels.forEach(function (p) {
+			// Reveal trigger for a step. Step 01 is already in place when the story reaches the screen,
+			// so a horizontal trigger would already be passed: it is revealed on vertical arrival instead.
+			function reveal(p, i, start) {
+				return i === 0
+					? { trigger: '.story', start: 'top 55%', toggleActions: 'play none none reverse' }
+					: { containerAnimation: h, trigger: p, start: start, toggleActions: 'play none none reverse' };
+			}
+			var hst = h.scrollTrigger;
+			panels.forEach(function (p, i) {
 				var ca = { containerAnimation: h, trigger: p };
 				gsap.fromTo($('.panel__num', p), { xPercent: 35 }, { xPercent: -35, ease: 'none', scrollTrigger: Object.assign({ start: 'left right', end: 'right left', scrub: true }, ca) });
-				gsap.from($$('.panel__body > *', p), { y: 90, opacity: 0, rotate: 3, stagger: 0.12, duration: 1, ease: 'power4.out', scrollTrigger: Object.assign({ start: 'left 60%', toggleActions: 'play none none reverse' }, ca) });
+				gsap.from($$('.panel__body > *', p), { y: 90, opacity: 0, rotate: 3, stagger: 0.12, duration: 1, ease: 'power4.out', scrollTrigger: reveal(p, i, 'left 60%') });
 				var st = $$('.panel__sticker', p);
-				if (st.length) gsap.from(st, { scale: 0, rotate: -40, duration: 0.9, stagger: 0.25, ease: 'back.out(2.5)', scrollTrigger: Object.assign({ start: 'left 40%', toggleActions: 'play none none reverse' }, ca) });
-				ScrollTrigger.create(Object.assign({ start: 'left center', end: 'right center', onToggle: function (s) { if (s.isActive) setChapter(p); } }, ca));
-			});
-			$$('.panel__art', track).forEach(function (art) {
-				gsap.from(art, { scale: 0.4, rotate: -25, opacity: 0, duration: 1.2, ease: 'back.out(1.6)', scrollTrigger: { containerAnimation: h, trigger: art.parentElement, start: 'left 45%', toggleActions: 'play none none reverse' } });
+				if (st.length) gsap.from(st, { scale: 0, rotate: -40, duration: 0.9, stagger: 0.25, ease: 'back.out(2.5)', delay: i === 0 ? 0.4 : 0, scrollTrigger: reveal(p, i, 'left 40%') });
+				var art = $('.panel__art', p);
+				if (art) gsap.from(art, { scale: 0.4, rotate: -25, opacity: 0, duration: 1.2, ease: 'back.out(1.6)', delay: i === 0 ? 0.2 : 0, scrollTrigger: reveal(p, i, 'left 45%') });
+				// Chapter indicator: for step 01, from entering the story to halfway to step 02
+				if (i === 0) ScrollTrigger.create({ trigger: '.story', start: 'top center', end: function () { return hst.start + (hst.end - hst.start) / (panels.length - 1) / 2; }, onToggle: function (s) { if (s.isActive) setChapter(p); } });
+				else ScrollTrigger.create(Object.assign({ start: 'left center', end: 'right center', onToggle: function (s) { if (s.isActive) setChapter(p); } }, ca));
 			});
 			var rings = $$('.art-wood .rings ellipse, .art-wood .crack');
 			rings.forEach(function (r) { r.setAttribute('pathLength', '1'); });
 			gsap.fromTo(rings, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, stagger: 0.08, ease: 'none', scrollTrigger: { containerAnimation: h, trigger: '.panel--wood', start: 'left 70%', end: 'left 5%', scrub: true } });
-			// Le caribou traverse la congère pendant qu'on fait défiler le panneau
+			// The caribou walks across the snowbank as the panel scrolls
 			gsap.fromTo('.caribou', { x: '22vw' }, { x: '-26vw', ease: 'none', scrollTrigger: { containerAnimation: h, trigger: '.panel--wood', start: 'left right', end: 'right left', scrub: true } });
 			gsap.from('.crt-man', { yPercent: 35, opacity: 0, duration: 1.2, ease: 'power4.out', scrollTrigger: { containerAnimation: h, trigger: '.panel--code', start: 'left 55%', toggleActions: 'play none none reverse' } });
 			gsap.fromTo('.sun', { rotate: -60, scale: 0.6 }, { rotate: 40, scale: 1, ease: 'none', scrollTrigger: { containerAnimation: h, trigger: '.panel--sun', start: 'left right', end: 'right left', scrub: true } });
@@ -1113,20 +1145,20 @@
 			});
 		});
 
-		// Chapitres verticaux pour le HUD
+		// Vertical chapters for the HUD
 		$$('[data-chapter]').forEach(function (el) {
 			if (el.classList.contains('panel')) return;
 			ScrollTrigger.create({ trigger: el, start: 'top center', end: 'bottom center', onToggle: function (s) { if (s.isActive) setChapter(el); } });
 		});
 
-		// Grands titres
+		// Big titles
 		$$('.work__title span, .stack__title, .human__title, .contact__title > *').forEach(function (el) {
 			gsap.from(el, { yPercent: 60, opacity: 0, rotate: 2.5, duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
 		});
 
-		// Cartes qui s'empilent
+		// Stacking cards
 		var cards = $$('.card');
-		// Une carte plus haute que l'écran colle plus haut, pour que son bas (la voie du camion) reste visible
+		// A card taller than the viewport sticks higher, so its bottom (the truck lane) stays visible
 		function stickCards() {
 			cards.forEach(function (card) {
 				card.style.top = Math.min(innerHeight * 0.12, innerHeight - card.offsetHeight - 24) + 'px';
@@ -1144,7 +1176,7 @@
 		});
 		gsap.from('.card__art--docs i', { y: 200, rotate: 30, stagger: 0.1, duration: 1.1, ease: 'back.out(1.6)', clearProps: 'transform', scrollTrigger: { trigger: '.card--illinks', start: 'top 60%' } });
 
-		// Hobbies : on distribue les cartes
+		// Hobbies: deal the cards
 		gsap.from('.hobby', {
 			y: 260, rotate: function (i) { return [-25, 18, -12, 22][i]; }, opacity: 0, stagger: 0.12, duration: 1.3, ease: 'power4.out',
 			clearProps: 'transform,opacity', scrollTrigger: { trigger: '.hobbies', start: 'top 85%' }
@@ -1154,7 +1186,7 @@
 		gsap.from('.contact__photo', { clipPath: 'inset(100% 0 0 0)', duration: 1.4, ease: 'power4.inOut', scrollTrigger: { trigger: '.contact', start: 'top 70%' } });
 		gsap.from('.field, .form__foot, .links li', { y: 40, opacity: 0, stagger: 0.07, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.form', start: 'top 85%' } });
 
-		// Footer : CARDIN qui rebondit
+		// Footer: bouncing CARDIN letters
 		var giant = $$('.footer__giant .ch');
 		gsap.from(giant, { yPercent: 110, rotate: function () { return gsap.utils.random(-25, 25); }, stagger: 0.06, duration: 1.1, ease: 'back.out(1.8)', scrollTrigger: { trigger: '.footer', start: 'top 85%' } });
 		giant.forEach(function (ch) {
@@ -1163,7 +1195,7 @@
 			});
 		});
 
-		// Ancres
+		// Anchor links
 		$$('a[href^="#"]').forEach(function (a) {
 			a.addEventListener('click', function (e) {
 				var id = a.getAttribute('href');
@@ -1171,12 +1203,14 @@
 				if (target === null) return;
 				e.preventDefault();
 				lenis ? lenis.scrollTo(target, { duration: 1.6 }) : window.scrollTo({ top: target ? target.getBoundingClientRect().top + scrollY : 0 });
+				// Move keyboard focus along with the scroll (skip link, in-page navigation)
+				if (target && target.focus) target.focus({ preventScroll: true });
 			});
 		});
 	}
 
 	/* ----------------------------------------------------------------------
-	   10. Loader + entrée du hero
+	   16. Loader and hero intro
 	   ---------------------------------------------------------------------- */
 	function intro(lenis) {
 		var loader = $('#loader');
@@ -1223,7 +1257,7 @@
 			.to('.hero__intro, .hero__scroll, .hero__meta, .nav, .hud', { opacity: 1, y: 0, duration: 0.9, stagger: 0.06, ease: 'power3.out', clearProps: 'transform' }, '<0.1')
 			.add(function () { if (lenis) lenis.start(); });
 
-		// Suivi souris des stickers
+		// Stickers follow the mouse
 		if (finePointer) {
 			$$('[data-float]').forEach(function (el) {
 				var f = parseFloat(el.getAttribute('data-float')) / 30;
@@ -1234,7 +1268,7 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   Démarrage
+	   Bootstrap
 	   ---------------------------------------------------------------------- */
 	applyLanguage();
 	clock();
