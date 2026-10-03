@@ -899,20 +899,58 @@
 	}
 
 	/* ----------------------------------------------------------------------
-	   13. Code: the CRT-head man turns his head towards the cursor
+	   13. Code: the CRT-head man looks at the cursor
 	   ---------------------------------------------------------------------- */
 	function crtHead() {
 		var man = $('.crt-man');
 		if (!man) return;
-		var head = $('.crt-head', man);
+		var head = $('.crt-head', man), face = $('.crt-face', man), gaze = $('.crt-gaze', man);
+		var sideH = $('.crt-side-h', man), sideV = $('.crt-side-v', man);
+
+		// Front face of the monitor box, in SVG units, and how far each layer moves
+		// with the gaze: the face slides towards the cursor, the back of the box the
+		// other way (revealing a side), and the screen content further, like eyes.
+		var X0 = 110, Y0 = 40, X1 = 292, Y1 = 192;
+		var FACE = [9, 6], BACK = [-24, -16], GAZE = [12, 8];
+		var IDLE = { x: -0.6, y: 0.5 }; // resting pose, also used without a mouse
+		var look = { x: IDLE.x, y: IDLE.y }, aim = { x: IDLE.x, y: IDLE.y }, visible = false;
+
+		function quad(ax, ay, bx, by, cx, cy, dx, dy) {
+			return 'M' + [ax, ay, 'L' + bx, by, 'L' + cx, cy, 'L' + dx, dy].map(function (v) {
+				return typeof v === 'number' ? v.toFixed(1) : v;
+			}).join(' ') + ' Z';
+		}
+		function render() {
+			var fx = look.x * FACE[0], fy = look.y * FACE[1];
+			var bx = look.x * BACK[0], by = look.y * BACK[1];
+			// The side the back of the box moves towards becomes visible
+			var x = bx < fx ? X0 : X1, y = by < fy ? Y0 : Y1;
+			sideH.setAttribute('d', quad(x + fx, Y0 + fy, x + bx, Y0 + by, x + bx, Y1 + by, x + fx, Y1 + fy));
+			sideV.setAttribute('d', quad(X0 + fx, y + fy, X1 + fx, y + fy, X1 + bx, y + by, X0 + bx, y + by));
+			face.setAttribute('transform', 'translate(' + fx.toFixed(1) + ' ' + fy.toFixed(1) + ')');
+			gaze.setAttribute('transform', 'translate(' + (look.x * GAZE[0]).toFixed(1) + ' ' + (look.y * GAZE[1]).toFixed(1) + ')');
+			gsap.set(head, { rotation: look.x * 3 });
+		}
+
 		gsap.set(head, { svgOrigin: '200 210' }); // the head pivots on the neck
-		var rotTo = gsap.quickTo(head, 'rotation', { duration: 0.8, ease: 'power3.out' });
-		man.closest('.panel').addEventListener('pointermove', function (e) {
-			if (man.classList.contains('is-busy')) return; // while being electrocuted, he stops looking at the cursor
-			var r = man.getBoundingClientRect();
-			var dx = (e.clientX - (r.left + r.width / 2)) / innerWidth;
-			var dy = (e.clientY - (r.top + r.height * 0.2)) / innerHeight;
-			rotTo(gsap.utils.clamp(-9, 9, dx * 22 + dy * 6));
+		new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(man);
+
+		// Gaze direction: from the screen centre to the cursor, normalised to [-1, 1]
+		window.addEventListener('pointermove', function (e) {
+			if (e.pointerType !== 'mouse') return;
+			var r = face.getBoundingClientRect();
+			aim.x = gsap.utils.clamp(-1, 1, (e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.35));
+			aim.y = gsap.utils.clamp(-1, 1, (e.clientY - (r.top + r.height / 2)) / (innerHeight * 0.35));
+		}, { passive: true });
+		document.addEventListener('mouseleave', function () { aim.x = IDLE.x; aim.y = IDLE.y; });
+
+		gsap.ticker.add(function () {
+			// While being electrocuted, he stops looking at the cursor
+			if (!visible || man.classList.contains('is-busy')) return;
+			if (Math.abs(aim.x - look.x) + Math.abs(aim.y - look.y) < 0.002) return;
+			look.x += (aim.x - look.x) * 0.12;
+			look.y += (aim.y - look.y) * 0.12;
+			render();
 		});
 	}
 

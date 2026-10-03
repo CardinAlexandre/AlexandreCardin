@@ -60,7 +60,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" />
-	<link rel="stylesheet" href="/assets/css/style.css?v=2026.11k" />
+	<link rel="stylesheet" href="/assets/css/style.css?v=2026.11m" />
 
 	<script>
 		/* Set the language and the JS state before the first paint, to avoid any flash */
@@ -547,41 +547,55 @@
 							<path class="g-dark" d="M126 600 L190 600 Q192 618 176 621 L118 621 Q110 610 126 600 Z" />
 							<path class="g-dark" d="M210 600 L274 600 Q290 610 282 621 L224 621 Q208 618 210 600 Z" />
 							<path class="g-jacket" d="M110 252 Q120 228 170 222 L230 222 Q280 228 290 252 L300 424 L100 424 Z" />
-							<path class="g-light" d="M178 222 L200 272 L222 222 Z" />
-							<path class="g-dark" d="M195 232 L205 232 L209 300 L200 314 L191 300 Z" />
-							<path class="g-lapel" d="M170 222 L196 292 L176 304 L150 242 Z" />
-							<path class="g-lapel" d="M230 222 L204 292 L224 304 L250 242 Z" />
+							<!-- Shirt, tie and collar -->
+							<path class="g-light" d="M170 222 L230 222 L200 368 Z" />
+							<path class="g-dark" d="M193 250 L207 250 L215 340 L200 358 L185 340 Z" />
+							<path class="crt-collar" d="M200 236 L168 220 L172 238 L184 262 Z" />
+							<path class="crt-collar" d="M200 236 L232 220 L228 238 L216 262 Z" />
+							<path class="g-dark" d="M191 230 L209 230 L205 250 L195 250 Z" />
+							<!-- Notched jacket lapels, from the collar down to the button -->
+							<path class="g-lapel" d="M168 224 L198 366 L190 368 L156 292 L144 248 L158 242 L152 232 L162 224 Z" />
+							<path class="g-lapel" d="M232 224 L202 366 L210 368 L244 292 L256 248 L242 242 L248 232 L238 224 Z" />
 							<path class="g-jacket" d="M110 252 C96 302 92 362 100 412 L124 412 C122 362 126 312 134 270 Z" />
 							<path class="g-jacket" d="M290 252 C304 302 308 362 300 412 L276 412 C278 362 274 312 266 270 Z" />
 							<ellipse class="g-skin" cx="112" cy="422" rx="13" ry="15" />
 							<ellipse class="g-skin" cx="288" cy="422" rx="13" ry="15" />
-							<path class="crt-line" d="M200 330 V420 M186 350 h-1 M186 385 h-1" />
+							<!-- Jacket closing, buttons and breast pocket -->
+							<path class="crt-line" d="M200 368 V424 M236 306 L262 302" />
+							<circle class="g-dark" cx="200" cy="384" r="3.4" />
+							<circle class="g-dark" cx="200" cy="406" r="3.4" />
 							<rect class="g-mid" x="166" y="206" width="68" height="18" rx="4" />
 						</g>
 
 						<!-- Head: an old CRT monitor -->
 						<g class="crt-head">
-							<path class="g-shade" d="M110 40 L140 22 L322 22 L292 40 Z" />
-							<path class="g-shade-dark" d="M292 40 L322 22 L322 174 L292 192 Z" />
-							<rect class="g-case" x="110" y="40" width="182" height="152" rx="12" />
-							<rect class="crt-screen" x="128" y="58" width="144" height="104" rx="18" />
-							<g clip-path="url(#crt-screen-clip)">
-								<rect class="crt-scanlines" x="128" y="58" width="144" height="104" fill="url(#crt-scan)" />
-								<text class="crt-text" x="200" y="118" text-anchor="middle">{ C# }</text>
-								<rect class="crt-cursor" x="232" y="124" width="14" height="4" />
-								<rect class="crt-off" x="128" y="58" width="144" height="104" opacity="0" />
-								<g class="crt-bootui" opacity="0">
-									<text class="crt-boot" x="200" y="104" text-anchor="middle">BOOT</text>
-									<rect class="crt-bar-bg" x="152" y="118" width="96" height="8" />
-									<rect class="crt-bar" x="152" y="118" width="0" height="8" />
+							<!-- Box sides, recomputed by JS so the monitor turns towards the cursor -->
+							<path class="crt-side-h g-shade-dark" d="M286.6 43 L306.4 32 L306.4 184 L286.6 195 Z" />
+							<path class="crt-side-v g-shade" d="M104.6 43 L286.6 43 L306.4 32 L124.4 32 Z" />
+							<g class="crt-face" transform="translate(-5.4 3)">
+								<rect class="g-case" x="110" y="40" width="182" height="152" rx="12" />
+								<rect class="crt-screen" x="128" y="58" width="144" height="104" rx="18" />
+								<g clip-path="url(#crt-screen-clip)">
+									<rect class="crt-scanlines" x="128" y="58" width="144" height="104" fill="url(#crt-scan)" />
+									<!-- Screen content drifts a bit further, like eyes following the cursor -->
+									<g class="crt-gaze" transform="translate(-7.2 4)">
+										<text class="crt-text" x="200" y="118" text-anchor="middle">{ C# }</text>
+										<rect class="crt-cursor" x="232" y="124" width="14" height="4" />
+									</g>
+									<rect class="crt-off" x="128" y="58" width="144" height="104" opacity="0" />
+									<g class="crt-bootui" opacity="0">
+										<text class="crt-boot" x="200" y="104" text-anchor="middle">BOOT</text>
+										<rect class="crt-bar-bg" x="152" y="118" width="96" height="8" />
+										<rect class="crt-bar" x="152" y="118" width="0" height="8" />
+									</g>
+									<path class="crt-glare" d="M138 66 Q170 60 200 64 Q160 74 142 96 Z" />
 								</g>
-								<path class="crt-glare" d="M138 66 Q170 60 200 64 Q160 74 142 96 Z" />
+								<rect class="crt-screen-rim" x="128" y="58" width="144" height="104" rx="18" />
+								<path class="crt-line" d="M134 174 h36 M134 180 h36 M134 186 h36" />
+								<circle class="g-dark" cx="258" cy="179" r="5" />
+								<circle class="g-dark" cx="276" cy="179" r="5" />
+								<rect class="g-shade" x="186" y="173" width="30" height="10" rx="2" />
 							</g>
-							<rect class="crt-screen-rim" x="128" y="58" width="144" height="104" rx="18" />
-							<path class="crt-line" d="M134 174 h36 M134 180 h36 M134 186 h36" />
-							<circle class="g-dark" cx="258" cy="179" r="5" />
-							<circle class="g-dark" cx="276" cy="179" r="5" />
-							<rect class="g-shade" x="186" y="173" width="30" height="10" rx="2" />
 						</g>
 											<g class="crt-bolts" opacity="0">
 							<path d="M92 72 l16 12 l-11 6 l18 14" /><path d="M326 52 l-13 16 l11 4 l-15 18" />
@@ -807,6 +821,6 @@
 	<script src="/assets/vendor/ScrollTrigger.min.js?v=3.15.0"></script>
 	<script src="/assets/vendor/lenis.min.js?v=1.3.26"></script>
 	<script src="/assets/js/i18n.js?v=2026.11k"></script>
-	<script src="/assets/js/app.js?v=2026.11k"></script>
+	<script src="/assets/js/app.js?v=2026.11l"></script>
 </body>
 </html>

@@ -773,6 +773,7 @@ html.js .manifesto__text .w { opacity: .13; }
 .crt-man .g-mid { fill: #262628; }
 .crt-man .g-dark { fill: #111113; }
 .crt-man .g-light { fill: #e6e6e6; }
+.crt-man .crt-collar { fill: #f4f4f4; stroke: #8a8a8a; stroke-width: 2; }
 .crt-man .g-skin { fill: #b9b9b9; }
 .crt-man .g-case { fill: #d6d6d6; }
 .crt-man .g-shade { fill: #a9a9a9; }
